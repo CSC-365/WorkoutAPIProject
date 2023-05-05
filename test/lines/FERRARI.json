@@ -1,0 +1,84 @@
+[
+    {
+      "name": "FERRARI",
+      "character_id": 663,
+      "conversation_count": 15,
+      "conversations": [
+        {
+          "title": "casablanca",
+          "line_count": 7,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 2,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 5,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 3,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "RICK"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 2,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        },
+        {
+          "title": "casablanca",
+          "line_count": 1,
+          "other_character": "LASZLO"
+        }
+      ]
+    }
+  ]

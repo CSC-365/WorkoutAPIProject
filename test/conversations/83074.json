@@ -1,0 +1,26 @@
+{
+    "conversation_id": 83074,
+    "title": "the matrix",
+    "lines": [
+      {
+        "name": "APOC",
+        "line_text": "hey oracle, did you know the warriors used to play there?"
+      },
+      {
+        "name": "ORACLE",
+        "line_text": "yeah but now they play at chase"
+      },
+      {
+        "name": "APOC",
+        "line_text": "i feel bad everyone is leaving oakland"
+      },
+      {
+        "name": "ORACLE",
+        "line_text": "eh its alright, the raiders suck anyways"
+      },
+      {
+        "name": "APOC",
+        "line_text": "bang bang niner gang baby oracle"
+      }
+    ]
+  }

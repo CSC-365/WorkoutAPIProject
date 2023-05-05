@@ -1,0 +1,107 @@
+[
+    {
+      "conversation_id": 42477,
+      "title": "clerks.",
+      "character1": "CAITLIN",
+      "character2": "DANTE",
+      "line_count": 89
+    },
+    {
+      "conversation_id": 70355,
+      "title": "sling blade",
+      "character1": "FRANK",
+      "character2": "KARL",
+      "line_count": 56
+    },
+    {
+      "conversation_id": 45571,
+      "title": "dog day afternoon",
+      "character1": "LEON",
+      "character2": "SONNY",
+      "line_count": 55
+    },
+    {
+      "conversation_id": 19670,
+      "title": "mr. smith goes to washington",
+      "character1": "JEFFERSON",
+      "character2": "SAUNDERS",
+      "line_count": 53
+    },
+    {
+      "conversation_id": 42520,
+      "title": "clerks.",
+      "character1": "DANTE",
+      "character2": "RANDAL",
+      "line_count": 52
+    },
+    {
+      "conversation_id": 45572,
+      "title": "dog day afternoon",
+      "character1": "LEON",
+      "character2": "SONNY",
+      "line_count": 45
+    },
+    {
+      "conversation_id": 19584,
+      "title": "mr. smith goes to washington",
+      "character1": "DIZ",
+      "character2": "SAUNDERS",
+      "line_count": 45
+    },
+    {
+      "conversation_id": 40734,
+      "title": "casino",
+      "character1": "ACE",
+      "character2": "NICKY",
+      "line_count": 43
+    },
+    {
+      "conversation_id": 42599,
+      "title": "clerks.",
+      "character1": "DANTE",
+      "character2": "VERONICA",
+      "line_count": 42
+    },
+    {
+      "conversation_id": 19675,
+      "title": "mr. smith goes to washington",
+      "character1": "JEFFERSON",
+      "character2": "SAUNDERS",
+      "line_count": 41
+    },
+    {
+      "conversation_id": 10803,
+      "title": "the graduate",
+      "character1": "BEN",
+      "character2": "MRS. ROBINSON",
+      "line_count": 41
+    },
+    {
+      "conversation_id": 29302,
+      "title": "the birds",
+      "character1": "ANNIE",
+      "character2": "MELANIE",
+      "line_count": 40
+    },
+    {
+      "conversation_id": 29397,
+      "title": "the birds",
+      "character1": "MELANIE",
+      "character2": "MITCH",
+      "line_count": 40
+    },
+    {
+      "conversation_id": 24318,
+      "title": "reservoir dogs",
+      "character1": "MR. PINK",
+      "character2": "MR. WHITE",
+      "line_count": 39
+    },
+    {
+      "conversation_id": 34547,
+      "title": "annie hall",
+      "character1": "ALVY",
+      "character2": "ANNIE",
+      "line_count": 39
+    }
+  ]

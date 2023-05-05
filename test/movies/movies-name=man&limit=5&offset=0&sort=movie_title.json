@@ -1,0 +1,37 @@
+[
+    {
+      "movie_id": 22,
+      "movie_title": "austin powers: international man of mystery",
+      "year": 1997,
+      "imdb_rating": 7.1,
+      "imdb_votes": 75240
+    },
+    {
+      "movie_id": 262,
+      "movie_title": "batman",
+      "year": 1989,
+      "imdb_rating": 7.6,
+      "imdb_votes": 112731
+    },
+    {
+      "movie_id": 261,
+      "movie_title": "batman forever",
+      "year": 1995,
+      "imdb_rating": 5.4,
+      "imdb_votes": 77223
+    },
+    {
+      "movie_id": 259,
+      "movie_title": "batman returns",
+      "year": 1992,
+      "imdb_rating": 6.9,
+      "imdb_votes": 79770
+    },
+    {
+      "movie_id": 290,
+      "movie_title": "catwoman",
+      "year": 2004,
+      "imdb_rating": 3.2,
+      "imdb_votes": 35065
+    }
+  ]

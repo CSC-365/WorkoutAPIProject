@@ -1,0 +1,12 @@
+[
+    {"name":"APOC","character_id":6518,
+    "conversation_count":4,
+    "conversations":
+    [
+        {"title":"the matrix","line_count":1,"other_character":"SWITCH"},
+        {"title":"the matrix","line_count":2,"other_character":"SWITCH"},
+        {"title":"the matrix","line_count":1,"other_character":"SWITCH"},
+        {"title":"the matrix", "line_count":3, "other_character":"ORACLE"}
+        ]
+        }
+    ]
