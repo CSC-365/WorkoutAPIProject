@@ -12,9 +12,9 @@ router = APIRouter()
 
 class logJSON(BaseModel):
     user_id: int
-    log_id: int
-    current_lbs: int
-    time_posted: datetime
+    # log_id: int               log will be created when the log posts
+    current_lbs: int        
+    # time_posted: datetime     datetime causes an error + it will be created when the log is created
 
 
 @router.get("/logs/{user_id}", tags=["logs"])
