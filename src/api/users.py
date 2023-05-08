@@ -6,7 +6,6 @@ from src import database as db
 
 router = APIRouter()
 
-
 class UserJson(BaseModel):
     name = str
     starting_lbs = int
@@ -16,18 +15,20 @@ class UserJson(BaseModel):
     gender = str
 
 
+
 @router.post("/users/{id}", tags=["users"])
 def create_user(user: UserJson):
-    # TODO: WE NEED TO ADD THE SCHEMA STRUCTURE
+    #TODO: WE NEED TO ADD THE SCHEMA STRUCTURE
     """
     This endpoints adds a user to the user databse. The user is represetned by a UserJson
     object which holds all the attributes for the user.
+
     Limitations:
     1. User must use Americans units for height and weight.
     2. Two users with the same name can be created, which will cause confusion for v2
-    """
+    """ 
     meta = MetaData()
-    users = Table('users', meta, autoload_with=db.engine)
+    users = Table('users', meta, autoload_with = db.engine)
 
     with db.engine.begin() as conn:
 
@@ -41,18 +42,15 @@ def create_user(user: UserJson):
         if uId is None:
             print('got it')
             return
-        u = conn.execute(users.insert().values(user_id=uId, starting_lbs=user.starting_lbs, name=user.name,
-                                               height=user.height_inches, avg_calorie_intake=user.avg_calorie_intake,
-                                               age=user.age, gender=user.gender))
+        u = conn.execute(users.insert().values(user_id = uId, starting_lbs = user.starting_lbs, name = user.name, height = user.height_inches, avg_calorie_intake = user.avg_calorie_intake, age = user.age, gender = user.gender))
         print(u.inserted_primary_key)
         return
-
-
+    
 @router.get("/users/{id}", tags=["users"])
 def get_user(id: int):
     """
     This endpoint returns a user's information based on their id. For each user it returns:
-
+    
     * `user_id`: the internal id of the user.
     * `name`: The name of the user.
     * `starting_lbs`: The starting weight of the user.
@@ -64,7 +62,7 @@ def get_user(id: int):
     json = None
 
     with db.engine.connect() as conn:
-        user = conn.execute(text("SELECT * FROM users WHERE user_id = :id"), {"id": id}).fetchone()
+        user = conn.execute(text("SELECT * FROM users WHERE user_id = :id"), {"id":id}).fetchone()
         if user:
             json = {
                 'user_id': user.user_id,
