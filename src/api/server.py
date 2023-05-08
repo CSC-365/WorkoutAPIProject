@@ -10,6 +10,11 @@ You can:
 * **Create a user based on personal information**
 * **Retrieve a user's information based on their id**
 
+## Goals
+
+You can:
+* **Create a goal based on a user's id and goal information**
+* **Retrieve a goal's information based on its id**
 """
 tags_metadata = [
     {

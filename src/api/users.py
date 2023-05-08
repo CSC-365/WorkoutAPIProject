@@ -7,18 +7,30 @@ from src import database as db
 router = APIRouter()
 
 class UserJson(BaseModel):
-    name = str
-    starting_lbs = int
-    height_inches = int
-    avg_calorie_intake = int
-    age = int
-    gender = str
+    name: str
+    starting_lbs: int
+    height_inches: int
+    avg_calorie_intake: int
+    age: int
+    gender: str
 
 
+"""
+input structure:
 
-@router.post("/users/{id}", tags=["users"])
+{
+    "name": "kenny",
+    "starting_lbs": 160,
+    "height_inches": 68,
+    "avg_calorie_intake": 2250,
+    "age": 20,
+    "gender": "M"
+}
+"""
+
+
+@router.post("/users/", tags=["users"])
 def create_user(user: UserJson):
-    #TODO: WE NEED TO ADD THE SCHEMA STRUCTURE
     """
     This endpoints adds a user to the user databse. The user is represetned by a UserJson
     object which holds all the attributes for the user.
@@ -33,18 +45,14 @@ def create_user(user: UserJson):
     with db.engine.begin() as conn:
 
         # make sure that the height and weight is not negative
+
         if user.starting_lbs < 0:
             raise HTTPException(status_code=400, detail="Invalid weight")
-        if user.height_inches < 0:
+        if int(user.height_inches) < 0:
             raise HTTPException(status_code=400, detail="Invalid height")
-        uId = conn.execute(text("SELECT MAX(user_id) FROM users")).fetchone()
-
-        if uId is None:
-            print('got it')
-            return
-        u = conn.execute(users.insert().values(user_id = uId, starting_lbs = user.starting_lbs, name = user.name, height = user.height_inches, avg_calorie_intake = user.avg_calorie_intake, age = user.age, gender = user.gender))
-        print(u.inserted_primary_key)
-        return
+        newId = conn.execute(text("SELECT MAX(user_id) FROM users")).fetchone()[0]
+        u = conn.execute(users.insert().values(user_id = 0 if newId is None else newId + 1, starting_lbs = user.starting_lbs, name = user.name, height_inches = user.height_inches, avg_calorie_intake = user.avg_calorie_intake, age = user.age, gender = user.gender))
+        return {"message": "user created successfully with id: " + str(newId) + "."}
     
 @router.get("/users/{id}", tags=["users"])
 def get_user(id: int):
@@ -68,7 +76,7 @@ def get_user(id: int):
                 'user_id': user.user_id,
                 'name': user.name,
                 'starting_lbs': user.starting_lbs,
-                'height_inches': user.height,
+                'height_inches': user.height_inches,
                 'avg_calorie_intake': user.avg_calorie_intake,
                 'age': user.age,
                 'gender': user.gender
