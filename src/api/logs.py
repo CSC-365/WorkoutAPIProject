@@ -9,11 +9,13 @@ from fastapi.params import Query
 
 router = APIRouter()
 
+
 class logJSON(BaseModel):
     user_id: int
     log_id: int
     current_lbs: int
     time_posted: datetime
+
 
 @router.get("/logs/{user_id}", tags=["logs"])
 def get_logs(user_id: int):
@@ -29,6 +31,7 @@ def get_logs(user_id: int):
         'Time_posted': time the log was posted
     
     """
+
 
 @router.post("/logs/{user_id}", tags=["logs"])
 def create_log(log: logJSON):
