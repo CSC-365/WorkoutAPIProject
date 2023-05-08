@@ -19,7 +19,6 @@ class UserJson(BaseModel):
 @router.post("/users/{id}", tags=["users"])
 def create_user(user: UserJson):
     #TODO: WE NEED TO ADD THE SCHEMA STRUCTURE
-
     """
     This endpoints adds a user to the user databse. The user is represetned by a UserJson
     object which holds all the attributes for the user.
