@@ -1,46 +1,25 @@
 from fastapi import FastAPI
-from src.api import characters, movies, conversations, lines, pkg_util
+from src.api import users, pkg_util
 
 description = """
-Movie API returns dialog statistics on top hollywood movies from decades past.
+Workout API returns workout information based on a user's physical attributes and goals.
 
-## Characters
-
-You can:
-* **list characters with sorting and filtering options.**
-* **retrieve a specific character by id**
-
-## Movies
+## Users
 
 You can:
-* **list movies with sorting and filtering options.**
-* **retrieve a specific movie by id**
-
-## Lines
-
-You can: 
-* **list lines of a conversation.**
-* **retrieve information on a character and its conversations**
-* **list conversations with sorting and filterting options.**
+* **Create a user based on personal information**
+* **Retrieve a user's information based on their id**
 
 """
 tags_metadata = [
     {
-        "name": "characters",
-        "description": "Access information on characters in movies.",
-    },
-    {
-        "name": "movies",
-        "description": "Access information on top-rated movies.",
-    },
-    {
-        "name": "lines",
-        "description": "Access informaiton on lines in movie conversations"
-    },
+        "name": "users",
+        "description": "Access information on users in the Workout API.",
+    }
 ]
 
 app = FastAPI(
-    title="Movie API",
+    title="Workout API",
     description=description,
     version="0.0.1",
     contact={
@@ -49,13 +28,10 @@ app = FastAPI(
     },
     openapi_tags=tags_metadata,
 )
-app.include_router(characters.router)
-app.include_router(movies.router)
-app.include_router(lines.router)
+app.include_router(users.router)
 app.include_router(pkg_util.router)
-app.include_router(conversations.router)
 
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Movie API. See /docs for more information."}
+    return {"message": "Welcome to the Workout API. See /docs for more information."}
