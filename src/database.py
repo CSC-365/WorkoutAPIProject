@@ -24,7 +24,7 @@ engine = sqlalchemy.create_engine(database_connection_url(), echo=True, future=T
 supabase_api_key = os.environ.get("SUPABASE_API_KEY")
 supabase_url = os.environ.get("SUPABASE_URL")
 
-# if supabase_api_key is None or supabase_url is None:
-#     raise Exception(
-#         "You must set the SUPABASE_API_KEY and SUPABASE_URL environment variables."
-#     )
+if supabase_api_key is None or supabase_url is None:
+    raise Exception(
+        "You must set the SUPABASE_API_KEY and SUPABASE_URL environment variables."
+    )
