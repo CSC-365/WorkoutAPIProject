@@ -93,4 +93,4 @@ def create_log(log: logJSON):
                                                    log_id=0 if newLogId is None else newLogId + 1,
                                                    current_lbs=log.current_lbs,
                                                    time_posted=current_timestamp()))
-        return {"Message": "Log successfully created with id: " + str(newLogId)}
+        return {"Message": "Log successfully created with id: " + str(newLogId + 1)}
