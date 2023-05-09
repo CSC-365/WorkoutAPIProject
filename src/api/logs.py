@@ -20,7 +20,7 @@ class logJSON(BaseModel):
 
 
 @router.get("/logs/{user_id}", tags=["logs"])
-def get_logs(user_id: int):
+def get_logs(log_id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
     'User_id': user_id,
