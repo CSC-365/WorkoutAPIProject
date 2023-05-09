@@ -20,7 +20,7 @@ class logJSON(BaseModel):
 
 
 @router.get("/logs/{user_id}", tags=["logs"])
-def get_logs(log_id: int):
+def get_logs(myId: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
     'User_id': user_id,
@@ -37,11 +37,11 @@ def get_logs(log_id: int):
     json = None
     users = Table('users', meta, autoload_with=db.engine)
     with db.engine.connect() as conn:
-        current_user = conn.execute("SELECT * FROM users WHERE user_id = :id").fetchone()[0]
-        loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :id"), {"id": id}).fetchall()
+        current_user = conn.execute(text("SELECT * FROM users WHERE user_id = :myId"), {"myId": myId}).fetchone()[0]
+        loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :myId"), {"myId": myId}).fetchall()
         if current_user:
             json = {
-                "user_id": current_user.user,
+                "user_id": current_user.user_id,
                 "name:": current_user.name,
                 "logs:": loglist
             }
