@@ -85,7 +85,7 @@ def create_log(log: logJSON):
     with db.engine.begin() as conn:
         if log.user_id < 0:
             raise HTTPException(status_code=400, detail="invalid user Id")
-        if log.weight < 0:
+        if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
         newLogId = conn.execute(text("SELECT MAX(log_id) FROM log")).fetchone()[0]
