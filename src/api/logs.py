@@ -38,12 +38,11 @@ def get_logs(myId: int):
     users = Table('users', meta, autoload_with=db.engine)
     with db.engine.connect() as conn:
         current_user = conn.execute(text("SELECT * FROM users WHERE user_id = :myId"), {"myId": myId}).fetchone()[0]
-        loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :myId"), {"myId": myId}).fetchall()
+        # loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :myId"), {"myId": myId}).fetchall()
         if current_user:
             json = {
                 "user_id": current_user.user_id,
-                "name:": current_user.name,
-                "logs:": loglist
+                "name:": current_user.name
             }
     if json is None:
         raise HTTPException(status_code=404, detail="user not found")
