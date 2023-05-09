@@ -1,0 +1,15 @@
+{
+    "User_id": 1,
+    "Workouts": [
+      {
+        "Workout_id": 1,
+        "Workout_name": "Run",
+        "Weight": 0,
+        "Distance_ft": 75429,
+        "Repetitions": null,
+        "Seconds": null,
+        "Sets": null,
+        "Times_per_week": 7
+      }
+    ]
+  }

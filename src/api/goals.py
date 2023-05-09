@@ -45,7 +45,7 @@ def create_goal(goal: GoalJson):
       
 
             # Calculate basal metabolic rate (BMR)
-            bmr = 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * user.age + 5 if user.gender == 'M' else 10 * user.starting_lbs + 6.25 * user.height - 5 * user.age - 161
+            bmr = 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * user.age + 5 if user.gender == 'M' else 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * user.age - 161
 
             # Calculate total daily energy expenditure (TDEE)
             tdee = bmr * 1.55
@@ -58,7 +58,9 @@ def create_goal(goal: GoalJson):
             feet_per_week = miles_per_week * 5280
 
             # user is going to run 7x per week for v1
-            conn.execute(workouts.insert().values(workout_id = 0 if newWorkoutId is None else newWorkoutId + 1, workout_name = "Run", weight = 0, distance_ft = feet_per_week / 7, repetitions = None, seconds = None, sets = None,  times_per_week = 7))
+            conn.execute(workouts.insert().values(workout_id = 0 if newWorkoutId is None else newWorkoutId + 1, workout_name = "Run", weight = 0, 
+                                                  distance_ft = feet_per_week / 7, repetitions = None, seconds = None, sets = None,  
+                                                  times_per_week = 7, user_id = goal.user_id))
     return {"message": "Goal created successfully with id: " + str(newGoalId + 1) + " and workout id: " + str(newWorkoutId + 1)}      
 
 @router.post("/goals/{id}", tags=["goals"])
