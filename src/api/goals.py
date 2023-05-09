@@ -9,9 +9,8 @@ from fastapi.params import Query
 router = APIRouter()
 class GoalJson(BaseModel):
     user_id: int
-    type_id: int            # removed user & goal id in order to get the id's from the database rather
+    type_id: int            
     target_weight: int
-    # workout_id: int
 
 @router.post("/goals/", tags=["goals"])
 def create_goal(goal: GoalJson):
@@ -20,8 +19,6 @@ def create_goal(goal: GoalJson):
     Upon creation of a goal, the user will be assigned a workout plan based on the associated information.
     That is then added to the workout database.
     """
-
-
     meta = MetaData()
     goals = Table('goals', meta, autoload_with = db.engine)
     workouts = Table('workouts', meta, autoload_with = db.engine)
