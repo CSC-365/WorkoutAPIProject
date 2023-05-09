@@ -33,6 +33,24 @@ def get_logs(log_id: int):
         'Time_posted': time the log was posted
     
     """
+    meta = MetaData()
+    json = None
+    users = Table('users', meta, autoload_with=db.engine)
+    with db.engine.connect() as conn:
+        current_user = conn.execute("SELECT * FROM users WHERE user_id = :id").fetchone()[0]
+        loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :id"), {"id": id}).fetchall()
+        if current_user:
+            json = {
+                "user_id": current_user.user,
+                "name:": current_user.name,
+                "logs:": loglist
+            }
+    if json is None:
+        raise HTTPException(status_code=404, detail="user not found")
+    return json
+
+
+
 
 
 """
