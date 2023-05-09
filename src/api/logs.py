@@ -19,7 +19,7 @@ class logJSON(BaseModel):
     # time_posted: datetime causes an error + it will be created when the log is created
 
 
-@router.get("/logs/{user_id}", tags=["logs"])
+@router.get("/logs/{id}", tags=["logs"])
 def get_logs(id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
