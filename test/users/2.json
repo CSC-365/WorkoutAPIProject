@@ -1,0 +1,9 @@
+{
+    "user_id": 2,
+    "name": "John Doe",
+    "starting_lbs": 180,
+    "height_inches": 72,
+    "avg_calorie_intake": 2000,
+    "age": 30,
+    "gender": "male"
+  }

@@ -63,14 +63,3 @@ def create_goal(goal: GoalJson):
                                                   times_per_week = 7, user_id = goal.user_id))
     return {"message": "Goal created successfully with id: " + str(newGoalId + 1) + " and workout id: " + str(newWorkoutId + 1)}      
 
-@router.post("/goals/{id}", tags=["goals"])
-def create_goal(goal_id: int):
-    """
-    This endpoint adds a goal to the goal database. The goal is represented by a GoalJson
-
-	* 'user_id': the user id of the goal, 
-	* 'Type_id': the type of workout (linked to a goal_type table)
-	* 'goal_id': the id of the goal, 
-	* 'Target_weight': the target weight for the goal
-    * 'Workout_id': id of the workout that is produced from the goal
-    """

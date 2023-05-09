@@ -45,6 +45,3 @@ def get_workouts(user_id: int):
                 'Times_per_week': workout.times_per_week
             })
         return {'User_id': user_id, 'Workouts': workout_list}
-    
-
-
