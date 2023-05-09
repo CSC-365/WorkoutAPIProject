@@ -1,25 +1,19 @@
-import datetime
 from fastapi import APIRouter, HTTPException
-from enum import Enum
-
 from pydantic import BaseModel
 from sqlalchemy.sql.functions import current_timestamp
 
 from src import database as db
 from sqlalchemy import *
-from fastapi.params import Query
 
 router = APIRouter()
 
 
 class logJSON(BaseModel):
     user_id: int
-    # log_id: int               log will be created when the log posts
     current_lbs: int
-    # time_posted: datetime causes an error + it will be created when the log is created
 
 
-@router.get("/logs/{user_id}", tags=["logs"])
+@router.get("/logs/{id}", tags=["logs"])
 def get_logs(id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:

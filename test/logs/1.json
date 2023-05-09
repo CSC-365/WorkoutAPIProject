@@ -1,0 +1,11 @@
+{
+  "user_id": 1,
+  "name": "nathan",
+  "logs": [
+    {
+      "log_id": 0,
+      "current_lbs": 140,
+      "time_posted": "2023-05-09T02:26:17.137028"
+    }
+  ]
+}
