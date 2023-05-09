@@ -33,10 +33,10 @@ def get_logs(id: int):
         'Time_posted': time the log was posted
     
     """
-    meta = MetaData()
     json = None
-    logJSON = None
     with db.engine.connect() as conn:
+        if id < 0:
+            raise HTTPException(status_code=400, detail= "id cannot be negative")
         user = conn.execute(text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
         logs = conn.execute(text("SELECT * FROM log WHERE user_id=:id"), {"id": id}).fetchall()
         if user:
@@ -83,6 +83,11 @@ def create_log(log: logJSON):
     workouts = Table('workouts', meta, autoload_with=db.engine)
 
     with db.engine.begin() as conn:
+        if log.user_id < 0:
+            raise HTTPException(status_code=400, detail="invalid user Id")
+        if log.weight < 0:
+            raise HTTPException(status_code=400, detail="invalid weight")
+
         newLogId = conn.execute(text("SELECT MAX(log_id) FROM log")).fetchone()[0]
         newLog = conn.execute(logs.insert().values(user_id=log.user_id,
                                                    log_id=0 if newLogId is None else newLogId + 1,
