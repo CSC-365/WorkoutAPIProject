@@ -20,7 +20,7 @@ class logJSON(BaseModel):
 
 
 @router.get("/logs/{user_id}", tags=["logs"])
-def get_logs(myId: int):
+def get_logs(id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
     'User_id': user_id,
@@ -35,14 +35,12 @@ def get_logs(myId: int):
     """
     meta = MetaData()
     json = None
-    users = Table('users', meta, autoload_with=db.engine)
     with db.engine.connect() as conn:
-        current_user = conn.execute(text("SELECT * FROM users WHERE user_id = :myId"), {"myId": myId}).fetchone()[0]
-        # loglist = conn.execute(text("SELECT * FROM log WHERE user_id = :myId"), {"myId": myId}).fetchall()
-        if current_user:
+        user = conn.execute(text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
+        if user:
             json = {
-                "user_id": current_user.user_id,
-                "name:": current_user.name
+                "user_id": user.user_id,
+                "name:": user.name
             }
     if json is None:
         raise HTTPException(status_code=404, detail="user not found")
