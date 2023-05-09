@@ -42,7 +42,12 @@ def get_logs(id: int):
         if user:
             json = {
                 "user_id": user.user_id,
-                "name:": user.name
+                "name": user.name,
+                "logs": [{
+                    "log_id": logs.log_id,
+                    "current_lbs" : logs.current_lbs,
+                    "time_posted" : logs.time_posted
+                }]
             }
     if json is None:
         raise HTTPException(status_code=404, detail="user not found")
