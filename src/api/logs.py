@@ -3,17 +3,21 @@ from fastapi import APIRouter, HTTPException
 from enum import Enum
 
 from pydantic import BaseModel
+from sqlalchemy.sql.functions import current_timestamp
+
 from src import database as db
 from sqlalchemy import *
 from fastapi.params import Query
 
 router = APIRouter()
 
+
 class logJSON(BaseModel):
     user_id: int
     # log_id: int               log will be created when the log posts
-    current_lbs: int        
-    # time_posted: datetime     datetime causes an error + it will be created when the log is created
+    current_lbs: int
+    # time_posted: datetime causes an error + it will be created when the log is created
+
 
 @router.get("/logs/{user_id}", tags=["logs"])
 def get_logs(user_id: int):
@@ -30,7 +34,19 @@ def get_logs(user_id: int):
     
     """
 
-@router.post("/logs/{user_id}", tags=["logs"])
+
+"""
+Input Structure:
+{
+    "User_id": 
+    "Log_id":
+    "Current_lbs":
+    "Time_posted": datetime for the log
+}
+"""
+
+
+@router.post("/logs/", tags=["logs"])
 def create_log(log: logJSON):
     """
 	'User_id': the id of the user who’s log this is being added to,
@@ -38,3 +54,16 @@ def create_log(log: logJSON):
 	'Current_lbs': the weight of the user for the log,
 	'Time_posted': datetime for the log
     """
+
+    meta = MetaData()
+    logs = Table('log', meta, autoload_with=db.engine)
+    users = Table('users', meta, autoload_with=db.engine)
+    workouts = Table('workouts', meta, autoload_with=db.engine)
+
+    with db.engine.begin() as conn:
+        newLogId = conn.execute(text("SELECT MAX(log_id) FROM log")).fetchone()[0]
+        newLog = conn.execute(logs.insert().values(user_id=log.user_id,
+                                                   log_id=0 if newLogId is None else newLogId + 1,
+                                                   current_lbs=log.current_lbs,
+                                                   time_posted=current_timestamp()))
+        return {"Message": "Log successfully created with id: " + str(newLogId)}
