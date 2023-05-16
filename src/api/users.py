@@ -1,10 +1,16 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import *
 from pydantic import BaseModel
+import enum
 
 from src import database as db
 
 router = APIRouter()
+
+
+class GenderEnum(str, enum.Enum):
+    M = "M"
+    F = "F"
 
 
 class UserJson(BaseModel):
@@ -13,7 +19,7 @@ class UserJson(BaseModel):
     height_inches: int
     avg_calorie_intake: int
     age: int
-    gender: str
+    gender: GenderEnum
 
 
 """
