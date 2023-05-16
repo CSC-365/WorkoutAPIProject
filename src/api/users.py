@@ -1,8 +1,9 @@
+import datetime
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import *
 from pydantic import BaseModel
 import enum
-
+from datetime import date
 from src import database as db
 
 router = APIRouter()
@@ -18,7 +19,7 @@ class UserJson(BaseModel):
     starting_lbs: int
     height_inches: int
     avg_calorie_intake: int
-    age: int
+    birthday: date
     gender: GenderEnum
 
 
@@ -30,7 +31,7 @@ input structure:
     "starting_lbs": 160,
     "height_inches": 68,
     "avg_calorie_intake": 2250,
-    "age": 20,
+    "birthday": 2002-06-24,
     "gender": "M"
 }
 """
@@ -45,6 +46,7 @@ def create_user(user: UserJson):
     Limitations:
     1. User must use Americans units for height and weight.
     2. Two users with the same name can be created, which will cause confusion for v2
+    3. Birthday string must be in format YYYY-MM-DD
     """
     meta = MetaData()
     users = Table('users', meta, autoload_with=db.engine)
@@ -57,13 +59,17 @@ def create_user(user: UserJson):
             raise HTTPException(status_code=400, detail="Invalid weight")
         if int(user.height_inches) < 0:
             raise HTTPException(status_code=400, detail="Invalid height")
+        birthday = datetime.strptime(user.birthday, "%Y-%m-%d").date()
         newId = conn.execute(
             text("SELECT MAX(user_id) FROM users")).fetchone()[0]
-        u = conn.execute(users.insert().values(user_id=0 if newId is None else newId + 1, starting_lbs=user.starting_lbs,
+        newId = conn.execute(
+            text("SELECT MAX(user_id) FROM users")).fetchone()[0]
+        u = conn.execute(users.insert().values(user_id=0 if newId is None else newId + 1,
+                                               starting_lbs=user.starting_lbs,
                                                name=user.name,
                                                height_inches=user.height_inches,
                                                avg_calorie_intake=user.avg_calorie_intake,
-                                               age=user.age,
+                                               birthday=birthday,
                                                gender=user.gender))
         return {"message": "user created successfully with id: " + str(newId) + "."}
 
@@ -77,7 +83,7 @@ def get_user(id: int):
         * `starting_lbs`: The starting weight of the user.
         * `height_inches`: The height of the user.
         * `avg_calorie_intake`: The average calorie intake of the user.
-        * 'age': The age of the user.
+        * 'birthday': The birthday of the user.
         * 'gender': the gender of the user.
     """
     json = None
@@ -92,7 +98,7 @@ def get_user(id: int):
                 'starting_lbs': user.starting_lbs,
                 'height_inches': user.height_inches,
                 'avg_calorie_intake': user.avg_calorie_intake,
-                'age': user.age,
+                'birthday': user.birthday,
                 'gender': user.gender
             }
 

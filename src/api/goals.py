@@ -46,9 +46,9 @@ def create_goal(goal: GoalJson):
                 text("SELECT * FROM users WHERE user_id = :id"), {"id": goal.user_id}).fetchone()
 
             # Calculate basal metabolic rate (BMR)
-            bmr = 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * user.age + \
+            bmr = 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * user.birthday + \
                 5 if user.gender == 'M' else 10 * user.starting_lbs + \
-                6.25 * user.height_inches - 5 * user.age - 161
+                6.25 * user.height_inches - 5 * user.birthday - 161
 
             # Calculate total daily energy expenditure (TDEE)
             tdee = bmr * 1.55
