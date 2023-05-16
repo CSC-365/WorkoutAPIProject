@@ -17,30 +17,33 @@ class logJSON(BaseModel):
 def get_logs(id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
-    'User_id': user_id,
-	'Name': name of the user,
-	'Logs': list of logs
-	
+    * 'User_id': user_id,
+        * 'Name': name of the user,
+        * 'Logs': list of logs
+
     Each log is represented by a dictionary with the following keys:
-        'Log_id': id of the log,
-        'Current_lbs':	weight associated with the log,
-        'Time_posted': time the log was posted
-    
+        * 'Log_id': id of the log,
+        * 'Current_lbs':	weight associated with the log,
+        * 'Time_posted': time the log was posted
+
     """
     json = None
     with db.engine.connect() as conn:
         if id < 0:
-            raise HTTPException(status_code=400, detail= "id cannot be negative")
-        user = conn.execute(text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
-        logs = conn.execute(text("SELECT * FROM log WHERE user_id=:id"), {"id": id}).fetchall()
+            raise HTTPException(
+                status_code=400, detail="id cannot be negative")
+        user = conn.execute(
+            text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
+        logs = conn.execute(
+            text("SELECT * FROM log WHERE user_id=:id"), {"id": id}).fetchall()
         if user:
             json = {
                 "user_id": user.user_id,
                 "name": user.name,
                 "logs": [{
                     "log_id": log.log_id,
-                    "current_lbs" : log.current_lbs,
-                    "time_posted" : log.time_posted
+                    "current_lbs": log.current_lbs,
+                    "time_posted": log.time_posted
                 } for log in logs]
             }
     if json is None:
@@ -48,27 +51,16 @@ def get_logs(id: int):
     return json
 
 
-
-
-
-"""
-Input Structure:
-{
-    "User_id": 
-    "Log_id":
-    "Current_lbs":
-    "Time_posted": datetime for the log
-}
-"""
-
-
 @router.post("/logs/", tags=["logs"])
 def create_log(log: logJSON):
     """
-	'User_id': the id of the user who’s log this is being added to,
-	'Log_id': the log that the workout is being added to,
-	'Current_lbs': the weight of the user for the log,
-	'Time_posted': datetime for the log
+    This endpoint creates a new log for a given user
+
+    Each log contains the following keys:
+        * 'Log_id': the log that the workout is being added to,
+        * 'User_id': the id of the user who’s log this is being added to,
+        * 'Current_lbs': the weight of the user for the log,
+        * 'Time_posted': datetime for the log
     """
 
     meta = MetaData()
@@ -82,9 +74,9 @@ def create_log(log: logJSON):
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLogId = conn.execute(text("SELECT MAX(log_id) FROM log")).fetchone()[0]
         newLog = conn.execute(logs.insert().values(user_id=log.user_id,
-                                                   log_id=0 if newLogId is None else newLogId + 1,
                                                    current_lbs=log.current_lbs,
                                                    time_posted=current_timestamp()))
+        newLogId = conn.execute(
+            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
         return {"Message": "Log successfully created with id: " + str(newLogId)}
