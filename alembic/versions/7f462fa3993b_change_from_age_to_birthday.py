@@ -1,4 +1,4 @@
-"""change from age to birthday
+"""change from age to birthday & auto generate ids
 
 Revision ID: 7f462fa3993b
 Revises: cc180ca59bbd
@@ -17,16 +17,21 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Modify the users table
+    # age -> birthday
     op.drop_column('users', 'age')
     op.add_column('users', sa.Column('birthday', sa.Date(), nullable=True))
 
-    # Modify other tables as needed
+    # Auto generate ids
+    op.drop_column('users', 'user_id')
+    op.add_column('users', sa.Column('id', sa.Integer(), primary_key=True))
 
 
 def downgrade() -> None:
-    # Modify the users table
+    # age -> birthday
     op.drop_column('users', 'birthday')
     op.add_column('users', sa.Column('age', sa.BigInteger(), nullable=True))
 
-    # Modify other tables as needed
+    # Auto generate ids
+    op.drop_column('users', 'id')
+    op.add_column('users', sa.Column(
+        'user_id', sa.BigInteger(), nullable=False))

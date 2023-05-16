@@ -3,8 +3,11 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import *
 from pydantic import BaseModel
 import enum
-from datetime import date
+from datetime import date, datetime
 from src import database as db
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 router = APIRouter()
 
@@ -21,6 +24,18 @@ class UserJson(BaseModel):
     avg_calorie_intake: int
     birthday: date
     gender: GenderEnum
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True)
+    starting_lbs = Column(Integer, nullable=True)
+    name = Column(Text, nullable=True)
+    height_inches = Column(Integer, nullable=True)
+    avg_calorie_intake = Column(Integer, nullable=True)
+    birthday = Column(Date, nullable=True)
+    gender = Column(Text, nullable=True)
 
 
 """
@@ -59,13 +74,12 @@ def create_user(user: UserJson):
             raise HTTPException(status_code=400, detail="Invalid weight")
         if int(user.height_inches) < 0:
             raise HTTPException(status_code=400, detail="Invalid height")
-        birthday = datetime.strptime(user.birthday, "%Y-%m-%d").date()
+        birthday = user.birthday
         newId = conn.execute(
             text("SELECT MAX(user_id) FROM users")).fetchone()[0]
         newId = conn.execute(
             text("SELECT MAX(user_id) FROM users")).fetchone()[0]
-        u = conn.execute(users.insert().values(user_id=0 if newId is None else newId + 1,
-                                               starting_lbs=user.starting_lbs,
+        u = conn.execute(users.insert().values(starting_lbs=user.starting_lbs,
                                                name=user.name,
                                                height_inches=user.height_inches,
                                                avg_calorie_intake=user.avg_calorie_intake,
