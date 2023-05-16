@@ -51,15 +51,6 @@ def get_logs(id: int):
     return json
 
 
-"""
-Input Structure:
-{
-    "User_id": 
-    "Current_lbs":
-}
-"""
-
-
 @router.post("/logs/", tags=["logs"])
 def create_log(log: logJSON):
     """

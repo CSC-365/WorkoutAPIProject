@@ -38,20 +38,6 @@ class User(Base):
     gender = Column(Text, nullable=True)
 
 
-"""
-input structure:
-
-{
-    "name": "kenny",
-    "starting_lbs": 160,
-    "height_inches": 68,
-    "avg_calorie_intake": 2250,
-    "birthday": 2002-06-24,
-    "gender": "M"
-}
-"""
-
-
 @router.post("/users/", tags=["users"])
 def create_user(user: UserJson):
     """
