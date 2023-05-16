@@ -55,9 +55,7 @@ def get_logs(id: int):
 Input Structure:
 {
     "User_id": 
-    "Log_id":
     "Current_lbs":
-    "Time_posted": datetime for the log
 }
 """
 
@@ -65,8 +63,11 @@ Input Structure:
 @router.post("/logs/", tags=["logs"])
 def create_log(log: logJSON):
     """
-        * 'User_id': the id of the user who’s log this is being added to,
+    This endpoint creates a new log for a given user
+
+    Each log contains the following keys:
         * 'Log_id': the log that the workout is being added to,
+        * 'User_id': the id of the user who’s log this is being added to,
         * 'Current_lbs': the weight of the user for the log,
         * 'Time_posted': datetime for the log
     """
@@ -82,10 +83,9 @@ def create_log(log: logJSON):
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLogId = conn.execute(
-            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
         newLog = conn.execute(logs.insert().values(user_id=log.user_id,
-                                                   log_id=0 if newLogId is None else newLogId + 1,
                                                    current_lbs=log.current_lbs,
                                                    time_posted=current_timestamp()))
+        newLogId = conn.execute(
+            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
         return {"Message": "Log successfully created with id: " + str(newLogId)}

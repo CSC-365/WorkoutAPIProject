@@ -20,7 +20,7 @@ class GoalJson(BaseModel):
 def create_goal(goal: GoalJson):
     """
     This endpoint adds a goal to the goals database. The goals are represented by a GoalJson.
-    Upon creation of a goal, the user will be assigned a workout plan based on the associated information.
+    Upon creation of a goal, a workout will be created based on the associated information.
     That is then added to the workout database.
     """
     meta = MetaData()

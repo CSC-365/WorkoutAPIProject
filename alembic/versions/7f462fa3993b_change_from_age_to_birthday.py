@@ -33,6 +33,10 @@ def upgrade() -> None:
     op.drop_column('workouts', 'workout_id')
     op.add_column('workouts', sa.Column('id', sa.Integer(), primary_key=True))
 
+    # Auto generate ids for logs table
+    op.drop_column('logs', 'log_id')
+    op.add_column('logs', sa.Column('id', sa.Integer(), primary_key=True))
+
 
 def downgrade() -> None:
     # age -> birthday
@@ -53,3 +57,8 @@ def downgrade() -> None:
     op.drop_column('workouts', 'id')
     op.add_column('workouts', sa.Column(
         'workout_id', sa.BigInteger(), nullable=False))
+
+    # Auto generate ids for logs table
+    op.drop_column('logs', 'id')
+    op.add_column('logs', sa.Column(
+        'log_id', sa.BigInteger(), nullable=False))
