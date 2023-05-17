@@ -59,9 +59,9 @@ def create_user(user: UserJson):
             raise HTTPException(status_code=400, detail="Invalid height")
         birthday = user.birthday
         newId = conn.execute(
-            text("SELECT MAX(user_id) FROM users")).fetchone()[0]
+            text("SELECT MAX(user_id) FROM users")).scalar_one()
         newId = conn.execute(
-            text("SELECT MAX(user_id) FROM users")).fetchone()[0]
+            text("SELECT MAX(user_id) FROM users")).scalar_one()
         u = conn.execute(db.users.insert().values(starting_lbs=user.starting_lbs,
                                                   name=user.name,
                                                   height_inches=user.height_inches,

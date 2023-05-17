@@ -71,5 +71,5 @@ def create_log(log: logJSON):
                                                       current_lbs=log.current_lbs,
                                                       time_posted=current_timestamp()))
         newLogId = conn.execute(
-            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
+            text("SELECT MAX(log_id) FROM log")).scalar_one()
         return {"Message": "Log successfully created with id: " + str(newLogId)}

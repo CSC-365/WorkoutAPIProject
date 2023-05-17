@@ -55,7 +55,7 @@ def create_goal(goal: GoalJson):
                                                  user_id=goal.user_id))
         # need to get the workout id
         workout_id = conn.execute(
-            text("SELECT MAX(workout_id) FROM workouts")).fetchone()[0]
+            text("SELECT MAX(workout_id) FROM workouts")).scalar_one()
         conn.execute(db.goals.insert().values(type_id=goal.type_id,
                                               user_id=goal.user_id,
                                               target_weight=goal.target_weight,
