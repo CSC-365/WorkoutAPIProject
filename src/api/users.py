@@ -1,11 +1,11 @@
-import datetime
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import *
 from pydantic import BaseModel
 import enum
-from datetime import date, datetime
+from datetime import date
 from src import database as db
 from sqlalchemy.ext.declarative import declarative_base
+
 
 Base = declarative_base()
 
@@ -49,9 +49,6 @@ def create_user(user: UserJson):
     2. Two users with the same name can be created, which will cause confusion for v2
     3. Birthday string must be in format YYYY-MM-DD
     """
-    meta = MetaData()
-    users = Table('users', meta, autoload_with=db.engine)
-
     with db.engine.begin() as conn:
 
         # make sure that the height and weight is not negative
@@ -65,12 +62,12 @@ def create_user(user: UserJson):
             text("SELECT MAX(user_id) FROM users")).fetchone()[0]
         newId = conn.execute(
             text("SELECT MAX(user_id) FROM users")).fetchone()[0]
-        u = conn.execute(users.insert().values(starting_lbs=user.starting_lbs,
-                                               name=user.name,
-                                               height_inches=user.height_inches,
-                                               avg_calorie_intake=user.avg_calorie_intake,
-                                               birthday=birthday,
-                                               gender=user.gender))
+        u = conn.execute(db.users.insert().values(starting_lbs=user.starting_lbs,
+                                                  name=user.name,
+                                                  height_inches=user.height_inches,
+                                                  avg_calorie_intake=user.avg_calorie_intake,
+                                                  birthday=birthday,
+                                                  gender=user.gender))
         return {"message": "user created successfully with id: " + str(newId) + "."}
 
 
