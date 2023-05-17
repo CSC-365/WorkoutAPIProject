@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import *
-from pydantic import BaseModel
 
 from src import database as db
 
@@ -24,10 +23,6 @@ def get_workouts(user_id: int):
         * 'Sets': number of sets of the workout
         * 'Times_per_week': the number of times per week the workout is performed
     """
-    meta = MetaData()
-    workouts = Table('workouts', meta, autoload_with=db.engine)
-    users = Table('users', meta, autoload_with=db.engine)
-
     with db.engine.begin() as conn:
         user = conn.execute(
             text("SELECT * FROM users WHERE user_id = :id"), {"id": user_id}).fetchone()

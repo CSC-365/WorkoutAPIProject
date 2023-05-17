@@ -1,12 +1,8 @@
 import datetime
 from fastapi import APIRouter, HTTPException
-from enum import Enum
-
 from pydantic import BaseModel
 from src import database as db
 from sqlalchemy import *
-from fastapi.params import Query
-
 router = APIRouter()
 
 
@@ -23,11 +19,6 @@ def create_goal(goal: GoalJson):
     Upon creation of a goal, a workout will be created based on the associated information.
     That is then added to the workout database.
     """
-    meta = MetaData()
-    goals = Table('goals', meta, autoload_with=db.engine)
-    workouts = Table('workouts', meta, autoload_with=db.engine)
-    users = Table('users', meta, autoload_with=db.engine)
-
     with db.engine.begin() as conn:
         # make sure that the type_id is in the range of acceptable plans
         # right now its just 0
@@ -55,18 +46,18 @@ def create_goal(goal: GoalJson):
         feet_per_week = miles_per_week * 5280
 
         # user is going to run 7x per week for v1
-        conn.execute(workouts.insert().values(workout_name="Run", weight=0,
-                                              distance_ft=feet_per_week / 7,
-                                              repetitions=None,
-                                              seconds=None,
-                                              sets=None,
-                                              times_per_week=7,
-                                              user_id=goal.user_id))
+        conn.execute(db.workouts.insert().values(workout_name="Run", weight=0,
+                                                 distance_ft=feet_per_week / 7,
+                                                 repetitions=None,
+                                                 seconds=None,
+                                                 sets=None,
+                                                 times_per_week=7,
+                                                 user_id=goal.user_id))
         # need to get the workout id
         workout_id = conn.execute(
-            text("SELECT MAX(workout_id) FROM workouts")).fetchone()[0]
-        conn.execute(goals.insert().values(type_id=goal.type_id,
-                                           user_id=goal.user_id,
-                                           target_weight=goal.target_weight,
-                                           workout_id=workout_id))
+            text("SELECT MAX(workout_id) FROM workouts")).scalar_one()
+        conn.execute(db.goals.insert().values(type_id=goal.type_id,
+                                              user_id=goal.user_id,
+                                              target_weight=goal.target_weight,
+                                              workout_id=workout_id))
     return {"message": "Goal created successfully."}

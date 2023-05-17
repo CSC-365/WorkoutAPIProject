@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.sql.functions import current_timestamp
-
 from src import database as db
 from sqlalchemy import *
 
@@ -62,21 +61,15 @@ def create_log(log: logJSON):
         * 'Current_lbs': the weight of the user for the log,
         * 'Time_posted': datetime for the log
     """
-
-    meta = MetaData()
-    logs = Table('log', meta, autoload_with=db.engine)
-    users = Table('users', meta, autoload_with=db.engine)
-    workouts = Table('workouts', meta, autoload_with=db.engine)
-
     with db.engine.begin() as conn:
         if log.user_id < 0:
             raise HTTPException(status_code=400, detail="invalid user Id")
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLog = conn.execute(logs.insert().values(user_id=log.user_id,
-                                                   current_lbs=log.current_lbs,
-                                                   time_posted=current_timestamp()))
+        newLog = conn.execute(db.logs.insert().values(user_id=log.user_id,
+                                                      current_lbs=log.current_lbs,
+                                                      time_posted=current_timestamp()))
         newLogId = conn.execute(
-            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
+            text("SELECT MAX(log_id) FROM log")).scalar_one()
         return {"Message": "Log successfully created with id: " + str(newLogId)}
