@@ -37,7 +37,7 @@ def get_logs(id: int):
     with db.engine.connect() as conn:
         if id < 0:
             raise HTTPException(status_code=400, detail= "id cannot be negative")
-        user = conn.execute(text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
+        user = conn.execute(text("SELECT *   FROM users WHERE user_id =:id"), {"id": id}).fetchone()
         logs = conn.execute(text("SELECT * FROM log WHERE user_id=:id"), {"id": id}).fetchall()
         if user:
             json = {
