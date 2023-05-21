@@ -23,6 +23,8 @@ def create_projection(user_id: int, projection: projectionJSON):
         logs = conn.execute(
             text("SELECT current_lbs, time_posted FROM log WHERE user_id = :user_id ORDER BY time_posted"), {"user_id": user_id}).fetchall()
         
+        if len(logs) == 0: # meaning they have no logs
+            raise HTTPException(status_code=404, detail="user has no logs")
         # write me a similar query getting the user
         # user = conn.execute(
         #     text("SELECT * FROM users WHERE id = :id"), {"id": user_id}).fetchone()
