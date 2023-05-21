@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import users, pkg_util, goals, logs, workouts
+from src.api import users, pkg_util, goals, logs, workouts, projection
 
 description = """
 Workout API returns workout information based on a user's physical attributes and goals.
@@ -25,6 +25,11 @@ You can:
 You can:
 * **Retrieve a workout's information based on its id**
 
+## Projections
+You can:
+* **Retrieve a user's projections based on its id**
+* **Create a new projection for a user**
+
 """
 tags_metadata = [
     {
@@ -43,6 +48,10 @@ tags_metadata = [
     {
         "name": "workouts",
         "description": "Access information on workouts in the Workout API.",
+    },
+    {
+        "name": "projection",
+        "description": "Access information on projections in the Workout API.",
     }
 ]
 
@@ -61,6 +70,7 @@ app.include_router(goals.router)
 app.include_router(pkg_util.router)
 app.include_router(logs.router)
 app.include_router(workouts.router)
+app.include_router(projection.router)
 
 
 @app.get("/")

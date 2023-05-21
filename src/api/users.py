@@ -58,17 +58,18 @@ def create_user(user: UserJson):
         if int(user.height_inches) < 0:
             raise HTTPException(status_code=400, detail="Invalid height")
         birthday = user.birthday
-        newId = conn.execute(
-            text("SELECT MAX(user_id) FROM users")).scalar_one()
-        newId = conn.execute(
-            text("SELECT MAX(user_id) FROM users")).scalar_one()
-        u = conn.execute(db.users.insert().values(starting_lbs=user.starting_lbs,
+        # newId = conn.execute(
+        #     text("SELECT MAX(user_id) FROM users")).scalar_one()
+        # newId = conn.execute(
+        #     text("SELECT MAX(user_id) FROM users")).scalar_one()
+        newUser = conn.execute(db.users.insert().values(starting_lbs=user.starting_lbs,
                                                   name=user.name,
                                                   height_inches=user.height_inches,
                                                   avg_calorie_intake=user.avg_calorie_intake,
                                                   birthday=birthday,
                                                   gender=user.gender))
-        return {"message": "user created successfully with id: " + str(newId) + "."}
+        print(newUser.inserted_primary_key)
+        return {"message": "user created successfully with id: " + str(newUser.inserted_primary_key[0]) + "."}
 
 
 @router.get("/users/{id}", tags=["users"])

@@ -22,8 +22,10 @@ def upgrade() -> None:
     op.add_column('users', sa.Column('birthday', sa.Date(), nullable=True))
 
     # Auto generate ids
+    # Drop foreign key constraints on users.user_id
+    op.drop_constraint('workouts_user_id_fkey', 'workouts', type_='foreignkey')
     op.drop_column('users', 'user_id')
-    op.add_column('users', sa.Column('id', sa.Integer(), primary_key=True))
+    op.add_column('users', sa.Column('id', sa.Integer(), unique=True, primary_key=True))
 
     # Auto generate ids for goals table
     op.drop_column('goals', 'goal_id')
@@ -34,8 +36,8 @@ def upgrade() -> None:
     op.add_column('workouts', sa.Column('id', sa.Integer(), primary_key=True))
 
     # Auto generate ids for logs table
-    op.drop_column('logs', 'log_id')
-    op.add_column('logs', sa.Column('id', sa.Integer(), primary_key=True))
+    op.drop_column('log', 'log_id')
+    op.add_column('log', sa.Column('id', sa.Integer(), primary_key=True))
 
 
 def downgrade() -> None:
