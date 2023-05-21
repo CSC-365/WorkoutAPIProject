@@ -22,7 +22,7 @@ def upgrade() -> None:
         'projection',
         sa.Column('projection_id', sa.Integer(), primary_key=True),
         sa.Column('user_id', sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(['user_id'], ['users.user_id']),
+        sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='projection_user_id_fkey'),
         sa.Column('projection_date', sa.DateTime(), nullable=False),
         sa.Column('projection_lbs', sa.SmallInteger(), nullable=False),
         sa.Column('date_posted', sa.DateTime(), nullable=False)
