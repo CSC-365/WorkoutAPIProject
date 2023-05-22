@@ -1,0 +1,12 @@
+{
+    "user_id": 1,
+    "name": "kenny",
+    "projections": [
+      {
+        "projection_id": 5,
+        "projection_lbs": 143,
+        "projection_date": "2023-07-01T00:00:00",
+        "date_posted": "2023-05-22T06:52:47.266783"
+      }
+    ]
+  }
