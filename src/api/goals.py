@@ -26,7 +26,7 @@ def create_goal(goal: GoalJson):
             raise HTTPException(status_code=400, detail="Invalid type_id")
 
         user = conn.execute(
-            text("SELECT * FROM users WHERE user_id = :id"), {"id": goal.user_id}).fetchone()
+            text("SELECT * FROM users WHERE id = :id"), {"id": goal.user_id}).fetchone()
 
         # Calculate basal metabolic rate (BMR)
         current_date = datetime.date.today()
@@ -46,7 +46,7 @@ def create_goal(goal: GoalJson):
         feet_per_week = miles_per_week * 5280
 
         # user is going to run 7x per week for v1
-        conn.execute(db.workouts.insert().values(workout_name="Run", weight=0,
+        newWorkout = conn.execute(db.workouts.insert().values(workout_name="Run", weight=0,
                                                  distance_ft=feet_per_week / 7,
                                                  repetitions=None,
                                                  seconds=None,
@@ -54,8 +54,7 @@ def create_goal(goal: GoalJson):
                                                  times_per_week=7,
                                                  user_id=goal.user_id))
         # need to get the workout id
-        workout_id = conn.execute(
-            text("SELECT MAX(workout_id) FROM workouts")).scalar_one()
+        workout_id = newWorkout.inserted_primary_key[0]
         conn.execute(db.goals.insert().values(type_id=goal.type_id,
                                               user_id=goal.user_id,
                                               target_weight=goal.target_weight,
