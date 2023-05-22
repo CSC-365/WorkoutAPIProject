@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import *
 import os
 import dotenv
 import sqlalchemy
@@ -19,3 +19,11 @@ def database_connection_url():
 # creating a new DB engine based on our connection string
 engine = sqlalchemy.create_engine(
     database_connection_url(), echo=True, future=True)
+
+
+meta = MetaData()
+workouts = Table('workouts', meta, autoload_with=engine)
+users = Table('users', meta, autoload_with=engine)
+logs = Table('log', meta, autoload_with=engine)
+goals = Table('goals', meta, autoload_with=engine)
+projection = Table('projection', meta, autoload_with=engine)

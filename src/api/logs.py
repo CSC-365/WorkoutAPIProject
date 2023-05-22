@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.sql.functions import current_timestamp
-
 from src import database as db
 from sqlalchemy import *
 
@@ -9,33 +8,31 @@ router = APIRouter()
 
 
 class logJSON(BaseModel):
-    user_id: int
     current_lbs: int
 
 
-@router.get("/logs/{id}", tags=["logs"])
-def get_logs(id: int):
+@router.get("/user/{user_id}/logs", tags=["logs"])
+def get_logs(user_id: int):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
     * 'User_id': user_id,
-        * 'Name': name of the user,
-        * 'Logs': list of logs
+    * 'Name': name of the user,
+    * 'Logs': list of logs
 
     Each log is represented by a dictionary with the following keys:
-        * 'Log_id': id of the log,
-        * 'Current_lbs':	weight associated with the log,
-        * 'Time_posted': time the log was posted
-
+    * 'Log_id': id of the log,
+    * 'Current_lbs':	weight associated with the log,
+    * 'Time_posted': time the log was posted
     """
     json = None
     with db.engine.connect() as conn:
-        if id < 0:
+        if user_id < 0:
             raise HTTPException(
                 status_code=400, detail="id cannot be negative")
         user = conn.execute(
-            text("SELECT * FROM users WHERE user_id =:id"), {"id": id}).fetchone()
+            text("SELECT * FROM users WHERE user_id =:user_id"), {"user_id": user_id}).fetchone()
         logs = conn.execute(
-            text("SELECT * FROM log WHERE user_id=:id"), {"id": id}).fetchall()
+            text("SELECT * FROM log WHERE user_id=:user_id"), {"user_id": user_id}).fetchall()
         if user:
             json = {
                 "user_id": user.user_id,
@@ -51,32 +48,24 @@ def get_logs(id: int):
     return json
 
 
-@router.post("/logs/", tags=["logs"])
-def create_log(log: logJSON):
+@router.post("/user/{user_id}/logs", tags=["logs"])
+def create_log(user_id: int, log: logJSON):
     """
     This endpoint creates a new log for a given user
 
     Each log contains the following keys:
-        * 'Log_id': the log that the workout is being added to,
-        * 'User_id': the id of the user who’s log this is being added to,
-        * 'Current_lbs': the weight of the user for the log,
-        * 'Time_posted': datetime for the log
+    * 'Log_id': the log that the workout is being added to,
+    * 'User_id': the id of the user who’s log this is being added to,
+    * 'Current_lbs': the weight of the user for the log,
+    * 'Time_posted': datetime for the log
     """
-
-    meta = MetaData()
-    logs = Table('log', meta, autoload_with=db.engine)
-    users = Table('users', meta, autoload_with=db.engine)
-    workouts = Table('workouts', meta, autoload_with=db.engine)
-
     with db.engine.begin() as conn:
-        if log.user_id < 0:
+        if user_id < 0:
             raise HTTPException(status_code=400, detail="invalid user Id")
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLog = conn.execute(logs.insert().values(user_id=log.user_id,
-                                                   current_lbs=log.current_lbs,
-                                                   time_posted=current_timestamp()))
-        newLogId = conn.execute(
-            text("SELECT MAX(log_id) FROM log")).fetchone()[0]
-        return {"Message": "Log successfully created with id: " + str(newLogId)}
+        newLog = conn.execute(db.logs.insert().values(user_id=user_id,
+                                                      current_lbs=log.current_lbs,
+                                                      time_posted=current_timestamp()))
+        return {"Message": "Log successfully created with id: " + str(newLog.inserted_primary_key[0]) + "."}
