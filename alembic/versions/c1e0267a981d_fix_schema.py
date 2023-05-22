@@ -1,8 +1,8 @@
-"""add pswd and salt to users
+"""fix schema
 
-Revision ID: 7ebb53893509
-Revises: 54db841c5205
-Create Date: 2023-05-21 16:57:19.977684
+Revision ID: c1e0267a981d
+Revises: 7ebb53893509
+Create Date: 2023-05-21 18:39:55.594570
 
 """
 from alembic import op
@@ -10,15 +10,17 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7ebb53893509'
-down_revision = '54db841c5205'
+revision = 'c1e0267a981d'
+down_revision = '7ebb53893509'
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
+    op.drop_column('users', 'password')
     op.add_column('users', sa.Column(
         'password', sa.LargeBinary(), nullable=True))
+    op.drop_column('users', 'salt')
     op.add_column('users', sa.Column('salt', sa.LargeBinary(), nullable=True))
 
 

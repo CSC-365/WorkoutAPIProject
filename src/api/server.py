@@ -39,8 +39,7 @@ tags_metadata = [
     {
         "name": "goals",
         "description": "Access information on goals in the Workout API.",
-    }
-    ,
+    },
     {
         "name": "logs",
         "description": "Access information on logs in the Workout API.",
@@ -52,7 +51,7 @@ tags_metadata = [
     {
         "name": "projection",
         "description": "Access information on projections in the Workout API.",
-    }
+    },
 ]
 
 app = FastAPI(
