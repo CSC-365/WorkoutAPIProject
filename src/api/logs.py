@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy.sql.functions import current_timestamp
 from src import database as db
@@ -12,7 +12,7 @@ class logJSON(BaseModel):
 
 
 @router.get("/user/{user_id}/logs", tags=["logs"])
-def get_logs(user_id: int):
+def get_logs(user_id: int = Query(ge=0)):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
     * 'User_id': user_id,
@@ -26,16 +26,14 @@ def get_logs(user_id: int):
     """
     json = None
     with db.engine.connect() as conn:
-        if user_id < 0:
-            raise HTTPException(
-                status_code=400, detail="id cannot be negative")
         user = conn.execute(
-            text("SELECT * FROM users WHERE user_id =:user_id"), {"user_id": user_id}).fetchone()
+            text("SELECT user_id, name FROM users WHERE id =:user_id"), {"user_id": user_id}).fetchone()
         logs = conn.execute(
-            text("SELECT * FROM log WHERE user_id=:user_id"), {"user_id": user_id}).fetchall()
+            text("SELECT log_id, current_lbs, time_posted FROM log WHERE user_id=:user_id"),
+            {"user_id": user_id}).fetchall()
         if user:
             json = {
-                "user_id": user.user_id,
+                "user_id": user._id,
                 "name": user.name,
                 "logs": [{
                     "log_id": log.log_id,
@@ -59,13 +57,21 @@ def create_log(user_id: int, log: logJSON):
     * 'Current_lbs': the weight of the user for the log,
     * 'Time_posted': datetime for the log
     """
+
     with db.engine.begin() as conn:
-        if user_id < 0:
-            raise HTTPException(status_code=400, detail="invalid user Id")
+        # if user_id < 0:
+        #     raise HTTPException(status_code=400, detail="invalid user Id")
+        userCheck = conn.execute(
+            text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
+        if userCheck is None:
+            raise HTTPException(status_code=404, detail="user not found")
+
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLog = conn.execute(db.logs.insert().values(user_id=user_id,
+        result = conn.execute(db.logs.insert().values(user_id=user_id,
                                                       current_lbs=log.current_lbs,
-                                                      time_posted=current_timestamp()))
-        return {"Message": "Log successfully created with id: " + str(newLog.inserted_primary_key[0]) + "."}
+                                                      time_posted=current_timestamp()).returning(db.logs.c.log_id))
+        newLogId = result.fetchone()[0]
+
+        return {newLogId}

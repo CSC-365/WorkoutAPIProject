@@ -7,6 +7,7 @@ from sqlalchemy import *
 
 router = APIRouter()
 
+
 class projectionJSON(BaseModel):
     projection_date: date
 
@@ -19,11 +20,17 @@ def create_projection(user_id: int, projection: projectionJSON):
     """
 
     with db.engine.begin() as conn:
+        # make sure that the user exists
+        user = conn.execute(
+            text("SELECT name FROM users WHERE id = :id"), {"id": user_id}).fetchone()
+        if user is None:
+            return HTTPException(status_code=404, detail="user not found")
+
         # get me all the logs based on the given user id
         logs = conn.execute(
-            text("SELECT current_lbs, time_posted FROM log WHERE user_id = :user_id ORDER BY time_posted"), {"user_id": user_id}).fetchall()
-        
-        if len(logs) == 0: # meaning they have no logs
+            text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"), {"user_id": user_id}).fetchall()
+
+        if len(logs) == 0:  # meaning they have no logs
             raise HTTPException(status_code=404, detail="user has no logs")
         # write me a similar query getting the user
         # user = conn.execute(
@@ -42,14 +49,15 @@ def create_projection(user_id: int, projection: projectionJSON):
         projectedLoss = int(round(logs[-1].current_lbs + (days * m), 0))
 
         newP = conn.execute(db.projection.insert().values(user_id=user_id,
-                                                            projection_lbs=projectedLoss,
-                                                            projection_date=projection.projection_date,
-                                                            date_posted=current_timestamp()))
-    
+                                                          projection_lbs=projectedLoss,
+                                                          projection_date=projection.projection_date,
+                                                          date_posted=current_timestamp()))
+
         return {"Message": "Projection successfully created with id: " + str(newP.inserted_primary_key[0]) + "."}
-    
+
+
 @router.get("/user/{user_id}/projection", tags=["projection"])
-def get_projection(user_id: int = Query(ge = 0)):
+def get_projection(user_id: int = Query(ge=0)):
     """
     This endpoint returns all the projections in the database for a given user. For each projection it returns:
     * 'User_id': user_id,
@@ -72,7 +80,7 @@ def get_projection(user_id: int = Query(ge = 0)):
             text("SELECT id, name FROM users WHERE id =:user_id"), {"user_id": user_id}).fetchone()
         projections = conn.execute(
             text("SELECT projection_id, projection_lbs, projection_date, date_posted FROM projection WHERE user_id=:user_id ORDER BY date_posted"), {"user_id": user_id}).fetchall()
-        
+
         if user:
             json = {
                 "user_id": user.id,

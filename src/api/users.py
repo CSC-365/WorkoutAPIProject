@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import *
 from pydantic import BaseModel
 import enum
@@ -73,11 +73,11 @@ def create_user(user: UserJson):
                                                         password=key,
                                                         salt=salt))
         print(newUser.inserted_primary_key)
-        return {"message": "user created successfully with id: " + str(newUser.inserted_primary_key[0]) + "."}
+        return {newUser.inserted_primary_key[0]}
 
 
 @router.get("/users/{id}", tags=["users"])
-def get_user(id: int):
+def get_user(id: int = Query(ge=0)):
     """
     This endpoint returns a user's information based on their id. For each user it returns:
         * `user_id`: the internal id of the user.
@@ -90,13 +90,16 @@ def get_user(id: int):
     """
     json = None
 
+
+
     with db.engine.connect() as conn:
         user = conn.execute(
-            text("SELECT * FROM users WHERE user_id = :id"), {"id": id}).fetchone()
+            text("SELECT id, name, starting_lbs, height_inches, avg_calorie_intake, birthday, gender FROM users "
+                 "WHERE id = :id"), {"id": id}).fetchone()
         if user:
             json = {
-                'user_id': user.user_id,
-                'name': user.username,
+                'user_id': user.id,
+                'name': user.name,
                 'starting_lbs': user.starting_lbs,
                 'height_inches': user.height_inches,
                 'avg_calorie_intake': user.avg_calorie_intake,
@@ -114,7 +117,7 @@ def get_user(id: int):
 def login_user(username: str, password: str):
     with db.engine.connect() as conn:
         user = conn.execute(
-            text("SELECT * FROM users WHERE name = :name"), {"name": username}).fetchone()
+            text("SELECT salt, password FROM users WHERE name = :name"), {"name": username}).fetchone()
 
         if user:
             stored_password = user.password.tobytes()  # convert to bytes
