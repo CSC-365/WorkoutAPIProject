@@ -19,6 +19,12 @@ def create_projection(user_id: int, projection: projectionJSON):
     """
 
     with db.engine.begin() as conn:
+        # make sure that the user exists
+        user = conn.execute(
+            text("SELECT name FROM users WHERE id = :id"), {"id": user_id}).fetchone()
+        if user is None:
+            return HTTPException(status_code=404, detail="user not found")
+        
         # get me all the logs based on the given user id
         logs = conn.execute(
             text("SELECT current_lbs, time_posted FROM log WHERE user_id = :user_id ORDER BY time_posted"), {"user_id": user_id}).fetchall()

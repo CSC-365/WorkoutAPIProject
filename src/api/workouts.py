@@ -25,15 +25,15 @@ def get_workouts(user_id: int):
     """
     with db.engine.begin() as conn:
         user = conn.execute(
-            text("SELECT * FROM users WHERE user_id = :id"), {"id": user_id}).fetchone()
+            text("SELECT id FROM users WHERE id = :id"), {"id": user_id}).fetchone()
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
         workouts = conn.execute(
-            text("SELECT * FROM workouts WHERE user_id = :id"), {"id": user_id}).fetchall()
+            text("SELECT id, workout_name, weight, distance_ft, repetitions, seconds, sets, times_per_week FROM workouts WHERE user_id = :id"), {"id": user_id}).fetchall()
         workout_list = []
         for workout in workouts:
             workout_list.append({
-                'Workout_id': workout.workout_id,
+                'Workout_id': workout.id,
                 'Workout_name': workout.workout_name,
                 'Weight': workout.weight,
                 'Distance_ft': workout.distance_ft,
