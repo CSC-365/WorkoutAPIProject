@@ -27,13 +27,13 @@ def get_logs(user_id: int = Query(ge=0)):
     json = None
     with db.engine.connect() as conn:
         user = conn.execute(
-            text("SELECT user_id, name FROM users WHERE user_id =:user_id"), {"user_id": user_id}).fetchone()
+            text("SELECT user_id, name FROM users WHERE id =:user_id"), {"user_id": user_id}).fetchone()
         logs = conn.execute(
             text("SELECT log_id, current_lbs, time_posted FROM log WHERE user_id=:user_id"),
             {"user_id": user_id}).fetchall()
         if user:
             json = {
-                "user_id": user.user_id,
+                "user_id": user._id,
                 "name": user.name,
                 "logs": [{
                     "log_id": log.log_id,
@@ -59,8 +59,13 @@ def create_log(user_id: int, log: logJSON):
     """
 
     with db.engine.begin() as conn:
-        if user_id < 0:
-            raise HTTPException(status_code=400, detail="invalid user Id")
+        # if user_id < 0:
+        #     raise HTTPException(status_code=400, detail="invalid user Id")
+        userCheck = conn.execute(
+            text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
+        if userCheck is None:
+            raise HTTPException(status_code=404, detail="user not found")
+        
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 

@@ -94,12 +94,12 @@ def get_user(id: int = Query(ge=0)):
 
     with db.engine.connect() as conn:
         user = conn.execute(
-            text("SELECT user_id, name, starting_lbs, height_inches, avg_calorie_intake, birthday, gender FROM users "
-                 "WHERE user_id = :id"), {"id": id}).fetchone()
+            text("SELECT id, name, starting_lbs, height_inches, avg_calorie_intake, birthday, gender FROM users "
+                 "WHERE id = :id"), {"id": id}).fetchone()
         if user:
             json = {
-                'user_id': user.user_id,
-                'name': user.username,
+                'user_id': user.id,
+                'name': user.name,
                 'starting_lbs': user.starting_lbs,
                 'height_inches': user.height_inches,
                 'avg_calorie_intake': user.avg_calorie_intake,

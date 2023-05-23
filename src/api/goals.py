@@ -27,7 +27,7 @@ def create_goal(goal: GoalJson):
             raise HTTPException(status_code=400, detail="Invalid type_id")
 
         user = conn.execute(
-            text("SELECT starting_lbs, birthday, starting_lbs, gender, starting_lbs FROM users WHERE id = :id"),
+            text("SELECT starting_lbs, birthday, starting_lbs, gender, starting_lbs, height_inches FROM users WHERE id = :id"),
             {"id": goal.user_id}).fetchone()
 
         # Calculate basal metabolic rate (BMR)
