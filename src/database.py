@@ -24,6 +24,6 @@ engine = sqlalchemy.create_engine(
 meta = MetaData()
 workouts = Table('workouts', meta, autoload_with=engine)
 users = Table('users', meta, autoload_with=engine)
-logs = Table('log', meta, autoload_with=engine)
+logs = Table('logs', meta, autoload_with=engine)
 goals = Table('goals', meta, autoload_with=engine)
 projection = Table('projection', meta, autoload_with=engine)

@@ -65,11 +65,13 @@ def create_log(user_id: int, log: logJSON):
             text("SELECT id FROM users WHERE id = :user_id"), {"user_id": user_id}).fetchone()
         if userCheck is None:
             raise HTTPException(status_code=404, detail="user not found")
-        
+
         if log.current_lbs < 0:
             raise HTTPException(status_code=400, detail="invalid weight")
 
-        newLog = conn.execute(db.logs.insert().values(user_id=user_id,
+        result = conn.execute(db.logs.insert().values(user_id=user_id,
                                                       current_lbs=log.current_lbs,
-                                                      time_posted=current_timestamp()))
-        return {(newLog.inserted_primary_key[0])}
+                                                      time_posted=current_timestamp()).returning(db.logs.c.log_id))
+        newLogId = result.fetchone()[0]
+
+        return {newLogId}
