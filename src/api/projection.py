@@ -49,7 +49,7 @@ def create_projection(user_id: int, projection: projectionJSON):
         return {"Message": "Projection successfully created with id: " + str(newP.inserted_primary_key[0]) + "."}
     
 @router.get("/user/{user_id}/projection", tags=["projection"])
-def get_projection(user_id: int = Query(ge = 0)):
+def get_projection(user_id: int = Query(ge=0)):
     """
     This endpoint returns all the projections in the database for a given user. For each projection it returns:
     * 'User_id': user_id,
