@@ -27,13 +27,14 @@ def get_logs(user_id: int = Query(ge=0)):
     json = None
     with db.engine.connect() as conn:
         user = conn.execute(
-            text("SELECT user_id, name FROM users WHERE id =:user_id"), {"user_id": user_id}).fetchone()
+            text("SELECT id, name FROM users WHERE id =:user_id"), {"user_id": user_id}).fetchone()
         logs = conn.execute(
-            text("SELECT log_id, current_lbs, time_posted FROM log WHERE user_id=:user_id"),
+            text(
+                "SELECT id, current_lbs, time_posted FROM logs WHERE user_id=:user_id"),
             {"user_id": user_id}).fetchall()
         if user:
             json = {
-                "user_id": user._id,
+                "user_id": user.id,
                 "name": user.name,
                 "logs": [{
                     "log_id": log.log_id,
@@ -71,7 +72,7 @@ def create_log(user_id: int, log: logJSON):
 
         result = conn.execute(db.logs.insert().values(user_id=user_id,
                                                       current_lbs=log.current_lbs,
-                                                      time_posted=current_timestamp()).returning(db.logs.c.log_id))
+                                                      time_posted=current_timestamp()).returning(db.logs.c.id))
         newLogId = result.fetchone()[0]
 
         return {newLogId}
