@@ -16,7 +16,7 @@ class projectionJSON(BaseModel):
 def create_projection(user_id: int, projection: projectionJSON):
     """
     This endpoint craetes the projections for the user based on the user's previous logs
-    and its target date. 
+    and its target date. User must have at least 2 logs to create a projection.
     """
 
     with db.engine.begin() as conn:
@@ -30,14 +30,18 @@ def create_projection(user_id: int, projection: projectionJSON):
         logs = conn.execute(
             text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"), {"user_id": user_id}).fetchall()
 
-        if len(logs) == 0:  # meaning they have no logs
-            raise HTTPException(status_code=404, detail="user has no logs")
+        if len(logs) == 0 or len(logs) == 1:  # meaning they have no logs
+            raise HTTPException(
+                status_code=404, detail="user does not have enough logs to make a projection")
         # write me a similar query getting the user
         # user = conn.execute(
         #     text("SELECT * FROM users WHERE id = :id"), {"id": user_id}).fetchone()
 
         # x-axis difference in days
         x = (logs[-1].time_posted.date() - logs[0].time_posted.date()).days
+        if x == 0:
+            raise HTTPException(
+                status_code=404, detail="user's logs are on the same day, cannot make a projection")
 
         # y-axis difference in lbs
         y = logs[-1].current_lbs - logs[0].current_lbs
