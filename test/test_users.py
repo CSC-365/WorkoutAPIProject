@@ -5,27 +5,34 @@ client = TestClient(app)
 
 
 def test_create_user():
-    response = client.post("/users/", json={
-        "name": "test",
-        "starting_lbs": 100,
-        "height_inches": 78,
-        "avg_calorie_intake": 2400,
-        "age": 45,
-        "gender": "M"
-        }
-    )
-    assert response.status_code == 200
-
-def test_create_user2():
-    response = client.post("/users/", json={
-            "name": "test2",
+    response = client.post("/users/", json=
+        {
+            "username": "test",
+            "password": "test1",
             "starting_lbs": 100,
             "height_inches": 78,
             "avg_calorie_intake": 2400,
-            "age": 45,
+            "birthday": "1978-04-03",
             "gender": "M"
         }
     )
+
+    
+    assert response.status_code == 200
+
+def test_create_user2():
+    response = client.post("/users/", json=
+        {
+            "username": "test2",
+            "password": "test2",
+            "starting_lbs": 300,
+            "height_inches": 88,
+            "avg_calorie_intake": 3000,
+            "birthday": "2000-01-23",
+            "gender": "M"
+        }
+    )
+    
     assert response.status_code == 200
 
 def test_get_user():
