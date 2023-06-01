@@ -37,7 +37,7 @@ def get_logs(user_id: int = Query(ge=0)):
                 "user_id": user.id,
                 "name": user.name,
                 "logs": [{
-                    "log_id": log.log_id,
+                    "log_id": log.id,
                     "current_lbs": log.current_lbs,
                     "time_posted": log.time_posted
                 } for log in logs]
