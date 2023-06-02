@@ -2,5 +2,6 @@
 venv
 .idea
 __pycache__
-/.env
+.env
 alembic/env.py
+src/__pycache__

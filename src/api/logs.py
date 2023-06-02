@@ -20,7 +20,7 @@ def get_logs(user_id: int = Query(ge=0)):
     * 'Logs': list of logs
 
     Each log is represented by a dictionary with the following keys:
-    * 'Log_id': id of the log,
+    * 'id': id of the log,
     * 'Current_lbs':	weight associated with the log,
     * 'Time_posted': time the log was posted
     """
@@ -53,7 +53,7 @@ def create_log(user_id: int, log: logJSON):
     This endpoint creates a new log for a given user
 
     Each log contains the following keys:
-    * 'Log_id': the log that the workout is being added to,
+    * 'id': the log that the workout is being added to,
     * 'User_id': the id of the user who’s log this is being added to,
     * 'Current_lbs': the weight of the user for the log,
     * 'Time_posted': datetime for the log
