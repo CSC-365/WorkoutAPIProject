@@ -2,6 +2,8 @@ from sqlalchemy import *
 import os
 import dotenv
 import sqlalchemy
+from faker import Faker
+import hashlib
 
 
 # conenction via the supabase url
