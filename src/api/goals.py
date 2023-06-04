@@ -15,7 +15,7 @@ class GoalJson(BaseModel):
 
 
 @router.post("/goals/", tags=["goals"])
-def create_goal(goal: GoalJson):
+def create_goal(goal: GoalJson):  # 1
     with db.engine.begin() as conn:
         if goal.type_id != 0:
             raise HTTPException(status_code=400, detail="Invalid type_id")

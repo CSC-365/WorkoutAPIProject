@@ -1,7 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
 from src.api.business_logic import calculate_projection
-from sqlalchemy.engine.row import RowProxy
 from src.api.business_logic import calculate_workout_plan
 
 

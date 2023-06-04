@@ -14,7 +14,7 @@ class projectionJSON(BaseModel):
 
 
 @router.post("/user/{user_id}/projection", tags=["projection"])
-def create_projection(user_id: int, projection: projectionJSON):
+def create_projection(user_id: int, projection: projectionJSON):  # 2
     with db.engine.begin() as conn:
         user = conn.execute(text("SELECT name FROM users WHERE id = :id"), {
                             "id": user_id}).fetchone()
@@ -43,7 +43,7 @@ def create_projection(user_id: int, projection: projectionJSON):
 
 
 @router.get("/user/{user_id}/projection", tags=["projection"])
-def get_projection(user_id: int = Query(ge=0)):
+def get_projection(user_id: int = Query(ge=0)):  # 3
     """
     This endpoint returns all the projections in the database for a given user. For each projection it returns:
     * 'User_id': user_id,
