@@ -8,121 +8,135 @@ from api import business_logic as bl
 
 import hashlib
 
+# get the first user id for incrementing
 
-num_users = 5
+num_users = 200000
 fake = Faker()
-new_users = []
+new_users = []  # used for id's but now used for user objects
+new_workouts = []  # list of workouts, index will relate to the user
+new_goals = []  # list of goals, index will relate to the user
+new_logs = []  # list of logs, index will relate to the user
+new_projections = []  # list of projections, index will relate to the user
+
+inserted_users = [] # list of inserted users
+goal_weights = [] # list of goal weights, index will relate to the user
+
 
 # create fake postes with fake names and birthdays
 
 
 with db.engine.begin() as conn:
     for i in range(num_users):
-        
-
-        new_logs = []
-        
+        if i % 1000 == 0:
+            print(f"Creating user {i}")
+        # get the greatest current id
 
         profile = fake.profile()
         weight = fake.random_int(min=0, max=350)        # could be changed later to test negative values and such
-        height = fake.random_int(min=36, max=96)       # at least 3 feet tall, max 8 feet tall
+        height = fake.random_int(min=36, max=96)    
         avg_calories = fake.random_int(min=1000, max=5000)  # at least 1000 calories, max 5000 calories
-        birthday = profile['birthdate']
+        birthday = profile["birthdate"]
         gender = fake.random_element(elements=('M', 'F'))
+        new_users.append({
+            "name": fake.name(),
+            "starting_lbs": weight,
+            "height_inches": height,
+            "avg_calorie_intake": avg_calories,
+            "birthday": birthday,
+            "gender": gender,
+            "password": None,
+            "salt": None
+        })
 
-        password = fake.password(length=10, special_chars=True, digits=True)
-        salt = os.urandom(32)  # A new salt for this user
-        key = hashlib.pbkdf2_hmac(
-            'sha256', password.encode('utf-8'), salt, 100000)
+    inserted_users = conn.execute(db.users.insert().values(new_users).returning(db.users)).fetchall()
 
-        # insert a new user
-        new_user = conn.execute(db.users.insert().values(starting_lbs=weight,
-                                                        name=fake.name(),
-                                                        height_inches=height,
-                                                        avg_calorie_intake=avg_calories,
-                                                        birthday=birthday,
-                                                        gender=gender,
-                                                        password=key,
-                                                        salt=salt))
+
+# for each user, create a its logs and then workout (adding the goal weight for later)
+with db.engine.begin() as conn:
+    for user in inserted_users:
+        num_logs = fake.random_int(min=3, max=5)
+        log_dates = set()
+        for j in range(num_logs):
+            log_date = fake.date_time_between(start_date='now', end_date='+5y', tzinfo=None)
+            while log_date in log_dates:
+                log_date = fake.date_time_between(start_date='now', end_date='+5y', tzinfo=None)
+            log_dates.add(log_date)
+            new_logs.append({
+                # user_id is the id of the user that the log is being added to
+                "user_id": user.id,
+                # give me a random date between now and 5 years from now
+                "time_posted": log_date,
+
+                # random weight between +/- 20 of what the generated weight is
+                "current_lbs": fake.random_int(min=weight-20, max=weight+20)
+    })
         
-        user_id = new_user.inserted_primary_key[0]
-        new_users.append(user_id)
-
-
-        # create a goal for each user 
-        goal_user = conn.execute(text("SELECT id, user, birthday, starting_lbs, height_inches, gender FROM users WHERE id = :id"), {"id": user_id}).fetchone()
-
         # generate a target weight <= 100 lbs less than the starting weight
-        goal_weight = fake.random_int(min=weight-100, max=weight)
+        goal_weight = fake.random_int(min=user.starting_lbs-100, max=user.starting_lbs)
+
+        # add goal weight for goals later
+        goal_weights.append(goal_weight)
         try: 
-                goal_distance, goal_times_per_week = bl.calculate_workout_plan(goal_user, goal_weight)
+                goal_distance, goal_times_per_week = bl.calculate_workout_plan(user, goal_weight)
         except ValueError as ve:
             print(str(ve))
             continue
 
-        new_workout = conn.execute(db.workouts.insert().values(
-            workout_name="Run",
-            weight=0,
-            distance_ft=goal_distance,
-            repetitions=None,
-            seconds=None,
-            sets=None,
-            times_per_week=goal_times_per_week,
-            user_id=user_id     # this id technically should match the user_id
-        ))
-
-        new_goal = conn.execute(db.goals.insert().values(
-            type_id=0,
-            user_id=user_id,
-            target_weight=goal_weight,
-            workout_id=new_workout.inserted_primary_key[0]
-        )) 
+        new_workouts.append({
+            "user_id": user.id,
+            "workout_name": "Run",
+            "weight": 0,
+            "distance_ft": goal_distance,
+            "repetitions": None,
+            "seconds": None,
+            "sets": None,
+            "times_per_week": goal_times_per_week,
+        })
+    new_workouts = conn.execute(db.workouts.insert().values(new_workouts).returning(db.workouts)).fetchall()
 
 
-        # create fake logs for each user 
-        num_logs = fake.random_int(min=1, max=100)
-        for j in range(num_logs):
-            new_logs.append({
-                # user_id is the id of the user that the log is being added to
-                "user_id": user_id,
 
-                # give me a random date between now and 5 years from now
-                "time_posted": fake.date_time_between(start_date='now', end_date='+5y', tzinfo=None),
+with db.engine.begin() as conn:
+    for i, w in enumerate(new_workouts):
+        if i % 1000 == 0:
+            print(f"Creating goal {i}")
+        # create a new goal for the associated workout
+        new_goals.append({
+            "user_id": w.user_id, # this id technically should match the user_id
+            "workout_id": w.id,
+            "type_id": 0,
+            "target_weight": goal_weights[i],
+        })
 
-                # random weight between +/- 20 of what the generated weight is
-                "current_lbs": fake.random_int(min=weight-20, max=weight+20)
-            
-            
-            })
-        
-        # execute the log insert
-        new_log = conn.execute(db.logs.insert().values(new_logs))
-        log_id = new_log.inserted_primary_key[0]       
-
-        if (i % 10 == 0):
-            print("user number: " + str(i))
-            print("id: " + str(user_id))
+    # execute logs & goal inserts
+    new_logs = conn.execute(db.logs.insert().values(new_logs).returning(db.logs)).fetchall()
+    conn.execute(db.goals.insert().values(new_goals))
 
 
 # new engine connection in order to commit new logs
-with db.engine.begin() as conn:
-    for user_id in new_users:
 
+with db.engine.begin() as conn:
+    j = 0
+    for i, user in enumerate(inserted_users):
+        if i % 1000 == 0:
+            print(f"creating projections for user {user.id}")
         # create 1-10 projections for each user
-        num_projections= fake.random_int(min=1, max=10)
-        new_projections = []
+        num_projections= fake.random_int(min=1, max=3)
+        
+        projection_logs = []
+        while(j < len(new_logs) and new_logs[j].user_id == user.id):
+            projection_logs.append(new_logs[j])
+            j += 1
 
         # get the most recent log for the user 
         for k in range(num_projections):
+            print("creating projection " + str(k)) 
             # ensure that the projection date is in the future & after the last log date
-            projection_logs = conn.execute(
-            text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"),
-            {"user_id": user_id}).fetchall()
+            # projection_logs = conn.execute(
+            # text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"),
+            # {"user_id": user.id}).fetchall()
 
-            projection_date = fake.date_between(start_date='now', end_date='+5y')
-            last_log_date = projection_logs[-1].time_posted.date()
-            while (projection_date < last_log_date):
-                projection_date = fake.date_between(start_date='now', end_date='+5y')
+            projection_date = fake.date_between(start_date=projection_logs[-1].time_posted.date(), end_date='+5y')
 
             # calculate the projection
 
@@ -135,13 +149,11 @@ with db.engine.begin() as conn:
         
             # add to the new projection list
             new_projections.append({
-                "user_id": user_id,
+                "user_id": user.id,
                 "projection_lbs": projected_loss,
                 "projection_date": projection_date,
-                "date_posted": last_log_date # date posted is last log date 
+                "date_posted": projection_logs[-1].time_posted.date() # date posted is last log date 
             })
 
-        # execute the projection insert
-        new_projection = conn.execute(db.projection.insert().values(new_projections))
-
-
+    # execute the projection inserts
+    conn.execute(db.projection.insert().values(new_projections))
