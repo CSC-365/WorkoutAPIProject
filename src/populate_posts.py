@@ -1,3 +1,5 @@
+from datetime import timedelta
+import time
 from sqlalchemy import *
 import os
 import dotenv
@@ -27,7 +29,7 @@ goal_weights = [] # list of goal weights, index will relate to the user
 
 with db.engine.begin() as conn:
     for i in range(num_users):
-        if i % 1000 == 0:
+        if i % 10000 == 0:
             print(f"Creating user {i}")
         # get the greatest current id
 
@@ -58,9 +60,9 @@ with db.engine.begin() as conn:
         log_dates = set()
         for j in range(num_logs):
             log_date = fake.date_time_between(start_date='now', end_date='+5y', tzinfo=None)
-            while log_date in log_dates:
+            while log_date.date() in log_dates:
                 log_date = fake.date_time_between(start_date='now', end_date='+5y', tzinfo=None)
-            log_dates.add(log_date)
+            log_dates.add(log_date.date())
             new_logs.append({
                 # user_id is the id of the user that the log is being added to
                 "user_id": user.id,
@@ -68,11 +70,11 @@ with db.engine.begin() as conn:
                 "time_posted": log_date,
 
                 # random weight between +/- 20 of what the generated weight is
-                "current_lbs": fake.random_int(min=weight-20, max=weight+20)
+                "current_lbs": fake.random_int(min=weight-10, max=weight+10)
     })
         
         # generate a target weight <= 100 lbs less than the starting weight
-        goal_weight = fake.random_int(min=user.starting_lbs-100, max=user.starting_lbs)
+        goal_weight = fake.random_int(min=user.starting_lbs-50, max=user.starting_lbs)
 
         # add goal weight for goals later
         goal_weights.append(goal_weight)
@@ -98,7 +100,7 @@ with db.engine.begin() as conn:
 
 with db.engine.begin() as conn:
     for i, w in enumerate(new_workouts):
-        if i % 1000 == 0:
+        if i % 10000 == 0:
             print(f"Creating goal {i}")
         # create a new goal for the associated workout
         new_goals.append({
@@ -118,7 +120,7 @@ with db.engine.begin() as conn:
 with db.engine.begin() as conn:
     j = 0
     for i, user in enumerate(inserted_users):
-        if i % 1000 == 0:
+        if i % 10000 == 0:
             print(f"creating projections for user {user.id}")
         # create 1-10 projections for each user
         num_projections= fake.random_int(min=1, max=3)
@@ -130,13 +132,12 @@ with db.engine.begin() as conn:
 
         # get the most recent log for the user 
         for k in range(num_projections):
-            print("creating projection " + str(k)) 
             # ensure that the projection date is in the future & after the last log date
             # projection_logs = conn.execute(
             # text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"),
             # {"user_id": user.id}).fetchall()
 
-            projection_date = fake.date_between(start_date=projection_logs[-1].time_posted.date(), end_date='+5y')
+            projection_date = fake.date_between(start_date=projection_logs[-1].time_posted.date(), end_date=projection_logs[-1].time_posted.date() + timedelta(days=1 * 365))
 
             # calculate the projection
 
@@ -146,6 +147,9 @@ with db.engine.begin() as conn:
             except ValueError as ve:
                 print(str(ve))
                 continue
+
+            if projected_loss > 32767 or projected_loss < -32767:
+                print('ayo its outside da small int brudda: ' + str(projected_loss))
         
             # add to the new projection list
             new_projections.append({
@@ -155,5 +159,20 @@ with db.engine.begin() as conn:
                 "date_posted": projection_logs[-1].time_posted.date() # date posted is last log date 
             })
 
+    time.sleep(5)
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
+    print('finsihed projections')
     # execute the projection inserts
-    conn.execute(db.projection.insert().values(new_projections))
+    try:
+        conn.execute(db.projection.insert().values(new_projections))
+    except Exception as e:
+        print(e)
+        print("error inserting projections")
+        pass
