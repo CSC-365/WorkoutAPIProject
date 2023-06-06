@@ -6,29 +6,33 @@ from sqlalchemy.engine.row import Row
 
 
 def calculate_projection(logs: List[Row], projection_date: date) -> int:
-    if len(logs) == 0 or len(logs) == 1:  # meaning they have no logs
-        raise ValueError("user does not have enough logs to make a projection")
+    try:
+        if len(logs) == 0 or len(logs) == 1:  # meaning they have no logs
+            raise ValueError("user does not have enough logs to make a projection")
 
-    # check for projection date in the past
-    if projection_date < date.today():
-        raise ValueError(
-            "projection date is in the past, cannot make a projection")
+        # check for projection date in the past
+        if projection_date < date.today():
+            raise ValueError(
+                "projection date is in the past, cannot make a projection")
 
-    # x-axis difference in days
-    x = (logs[-1].time_posted.date() - logs[0].time_posted.date()).days
-    if x == 0:
-        raise ValueError(
-            "user's logs are on the same day, cannot make a projection")
+        # x-axis difference in days
+        x = (logs[-1].time_posted.date() - logs[0].time_posted.date()).days
+        if x == 0:
+            raise ValueError(
+                "user's logs are on the same day, cannot make a projection")
 
-    # y-axis difference in lbs
-    y = logs[-1].current_lbs - logs[0].current_lbs
+        # y-axis difference in lbs
+        y = logs[-1].current_lbs - logs[0].current_lbs
 
-    # slope
-    m = round(y / x, 2)
+        # slope
+        m = round(y / x, 2)
 
-    days = (projection_date - date.today()).days
-    projected_loss = int(round(logs[-1].current_lbs + (days * m), 0))
-
+        days = (projection_date - date.today()).days
+        projected_loss = int(round(logs[-1].current_lbs + (days * m), 0))
+    except ValueError as ve:
+        # Log the error message to a file
+        with open("error_log.txt", "a") as f:
+            f.write(f"ValueError: {str(ve)}\n")
     return projected_loss
 
 
