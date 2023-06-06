@@ -78,3 +78,4 @@ def downgrade() -> None:
     op.drop_table('goals')
     op.drop_table('users')
 
+

@@ -5,3 +5,4 @@ __pycache__
 .env
 alembic/env.py
 src/__pycache__
+result.txt
