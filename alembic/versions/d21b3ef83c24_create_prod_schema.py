@@ -18,6 +18,7 @@ depends_on = None
 
 def upgrade():
     # drop all tables
+
     op.execute("""
     DROP TABLE public.projection;
     DROP TABLE public.workouts;
