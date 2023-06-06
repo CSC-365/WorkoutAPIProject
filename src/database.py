@@ -2,8 +2,6 @@ from sqlalchemy import *
 import os
 import dotenv
 import sqlalchemy
-from faker import Faker
-import hashlib
 
 
 # conenction via the supabase url
@@ -29,3 +27,7 @@ users = Table('users', meta, autoload_with=engine)
 logs = Table('logs', meta, autoload_with=engine)
 goals = Table('goals', meta, autoload_with=engine)
 projection = Table('projection', meta, autoload_with=engine)
+
+sorted_tables = [users, workouts, logs, goals, projection]
+tables = {"users": users, "workouts": workouts,
+          "logs": logs, "goals": goals, "projection": projection}
