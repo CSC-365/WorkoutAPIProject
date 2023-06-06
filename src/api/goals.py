@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from src import database as db
 from sqlalchemy import *
+from src.api import business_logic as bl
 
 router = APIRouter()
 
@@ -14,51 +15,40 @@ class GoalJson(BaseModel):
 
 
 @router.post("/goals/", tags=["goals"])
-def create_goal(goal: GoalJson):
-    """
-    This endpoint adds a goal to the goals' database. The goals are represented by a GoalJson.
-    Upon creation of a goal, a workout will be created based on the associated information.
-    That is then added to the workout database.
-    """
+def create_goal(goal: GoalJson):  # 1
     with db.engine.begin() as conn:
-        # make sure that the type_id is in the range of acceptable plans
-        # right now its just 0
         if goal.type_id != 0:
             raise HTTPException(status_code=400, detail="Invalid type_id")
 
         user = conn.execute(
-            text("SELECT starting_lbs, birthday, starting_lbs, gender, starting_lbs, height_inches FROM users WHERE id = :id"),
-            {"id": goal.user_id}).fetchone()
+            text(
+                "SELECT starting_lbs, birthday, gender, height_inches FROM users WHERE id = :id"),
+            {"id": goal.user_id}
+        ).fetchone()
 
-        # Calculate basal metabolic rate (BMR)
-        current_date = datetime.date.today()
-        age = current_date.year - user.birthday.year
-        bmr = 10 * user.starting_lbs + 6.25 * user.height_inches - 5 * age + \
-              5 if user.gender == 'M' else 10 * user.starting_lbs + \
-                                           6.25 * user.height_inches - 5 * age - 161
+        try:
+            distance_ft, times_per_week = bl.calculate_workout_plan(
+                user, goal.target_weight)
+        except ValueError as ve:
+            return HTTPException(status_code=400, detail=str(ve))
 
-        # Calculate total daily energy expenditure (TDEE)
-        tdee = bmr * 1.55
+        newWorkout = conn.execute(db.workouts.insert().values(
+            workout_name="Run",
+            weight=0,
+            distance_ft=distance_ft,
+            repetitions=None,
+            seconds=None,
+            sets=None,
+            times_per_week=times_per_week,
+            user_id=goal.user_id
+        ))
 
-        # Calculate daily caloric deficit
-        daily_caloric_deficit = 500 * (user.starting_lbs - goal.target_weight)
-
-        # Calculate feet per week needed to lose weight
-        miles_per_week = daily_caloric_deficit / 100
-        feet_per_week = miles_per_week * 5280
-
-        # user is going to run 7x per week for v1
-        newWorkout = conn.execute(db.workouts.insert().values(workout_name="Run", weight=0,
-                                                              distance_ft=feet_per_week / 7,
-                                                              repetitions=None,
-                                                              seconds=None,
-                                                              sets=None,
-                                                              times_per_week=7,
-                                                              user_id=goal.user_id))
-        # need to get the workout id
         workout_id = newWorkout.inserted_primary_key[0]
-        conn.execute(db.goals.insert().values(type_id=goal.type_id,
-                                              user_id=goal.user_id,
-                                              target_weight=goal.target_weight,
-                                              workout_id=workout_id))
+        conn.execute(db.goals.insert().values(
+            type_id=goal.type_id,
+            user_id=goal.user_id,
+            target_weight=goal.target_weight,
+            workout_id=workout_id
+        ))
+
     return {"message": "Goal created successfully."}

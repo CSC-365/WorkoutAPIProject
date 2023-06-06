@@ -72,7 +72,6 @@ def create_user(user: UserJson):
                                                         gender=user.gender,
                                                         password=key,
                                                         salt=salt))
-        print(newUser.inserted_primary_key)
         return {newUser.inserted_primary_key[0]}
 
 
@@ -89,8 +88,6 @@ def get_user(id: int = Query(ge=0)):
         * 'gender': the gender of the user.
     """
     json = None
-
-
 
     with db.engine.connect() as conn:
         user = conn.execute(
