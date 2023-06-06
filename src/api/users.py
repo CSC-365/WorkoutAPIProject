@@ -45,7 +45,7 @@ class User(Base):
 @router.post("/users/", tags=["users"])
 def create_user(user: UserJson):
     """
-    This endpoints adds a user to the user databse. The user is represetned by a UserJson
+    This endpoints adds a user to the user databse. The user is represented by a UserJson
     object which holds all the attributes for the user.
 
     Limitations:
