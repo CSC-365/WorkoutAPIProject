@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2023-06-05T21:47:52.688Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="z63a7R2xZInl_F2GOA4v" version="21.2.8" type="device">
+<mxfile host="Electron" modified="2023-06-06T05:52:37.379Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.8 Chrome/112.0.5615.165 Electron/24.2.0 Safari/537.36" etag="2zFN75tZgodjrTVqUKig" version="21.2.8" type="device">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
     <mxGraphModel dx="1964" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -43,8 +43,8 @@
             <mxPoint x="440" y="300" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="mjiUjwl8vzSuEEX9nJL5-10" value="User enters the create projection endpoint" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="175" y="268" width="250" height="30" as="geometry" />
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-10" value="The create projection endpoint retrieves&amp;nbsp;&lt;br&gt;logs to create the projection" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="180" y="263" width="240" height="40" as="geometry" />
         </mxCell>
         <mxCell id="mjiUjwl8vzSuEEX9nJL5-11" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -72,6 +72,144 @@
         </mxCell>
         <mxCell id="mjiUjwl8vzSuEEX9nJL5-16" value="The creation of the log is finished" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="480" y="488" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-17" value="Create Goal:" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="-25" y="678" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-18" value="Phantom Read:" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="15" y="728" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-19" value="T1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-20" value="Database" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-21" value="T2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-22" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="mjiUjwl8vzSuEEX9nJL5-19">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="1200" as="sourcePoint" />
+            <mxPoint x="370" y="1030" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-23" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="689.5" y="1200" as="sourcePoint" />
+            <mxPoint x="689.5" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-24" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="409.5" y="1200" as="sourcePoint" />
+            <mxPoint x="409.5" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-25" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="900" as="sourcePoint" />
+            <mxPoint x="410" y="900" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-26" value="The get workouts endpoint begins to read&lt;br&gt;workouts for a specific user" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="150" y="863" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-27" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="960" as="sourcePoint" />
+            <mxPoint x="410" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-28" value="The create goal endpoint starts creating&amp;nbsp;&lt;br&gt;a new workout" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="923" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-29" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="1040" as="sourcePoint" />
+            <mxPoint x="410" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-30" value="The workouts for the user are read and returned" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1008" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-31" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="1120" as="sourcePoint" />
+            <mxPoint x="410" y="1120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-32" value="The new workout is created. This new workout&lt;br&gt;would be a phantom row bc it&amp;nbsp;&lt;br&gt;didn&#39;t show up in the read in T1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="415" y="1060" width="270" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-34" value="T1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1452" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-35" value="Database" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="1452" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-36" value="T2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="1452" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-37" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="mjiUjwl8vzSuEEX9nJL5-34">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="1862" as="sourcePoint" />
+            <mxPoint x="370" y="1692" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-38" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="689.5" y="1862" as="sourcePoint" />
+            <mxPoint x="689.5" y="1512" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-39" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="409.5" y="1862" as="sourcePoint" />
+            <mxPoint x="409.5" y="1512" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-40" value="Phantom Read:" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="-15" y="1380" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-41" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="1562" as="sourcePoint" />
+            <mxPoint x="410" y="1562" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-42" value="The get projection endpoint starts to read&lt;br&gt;the projections for a given user." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="150" y="1525" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-43" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="1622" as="sourcePoint" />
+            <mxPoint x="410" y="1622" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-44" value="The create projection endpoint starts to create&amp;nbsp;&lt;br&gt;a new projection for the same user" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="415" y="1585" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-45" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="1702" as="sourcePoint" />
+            <mxPoint x="410" y="1702" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-46" value="The get projection endpoint finishes the read,&amp;nbsp;&lt;br&gt;but it doesn&#39;t read the newly created&amp;nbsp;&lt;br&gt;projection from T2." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="130" y="1650" width="270" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-47" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="1782" as="sourcePoint" />
+            <mxPoint x="410" y="1782" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-48" value="The new projection is created." style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="460" y="1750" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="mjiUjwl8vzSuEEX9nJL5-49" value="Get Projection:" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="-60" y="1280" width="100" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
