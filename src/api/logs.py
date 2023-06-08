@@ -15,14 +15,14 @@ class logJSON(BaseModel):
 def get_logs(user_id: int = Query(ge=0)):
     """
     This endpoint returns all the logs in the database for a given user. For each log it returns:
-    * 'User_id': user_id,
-    * 'Name': name of the user,
-    * 'Logs': list of logs
+    * `User_id`: user_id,
+    * `Name`: name of the user,
+    * `Logs`: list of logs
 
     Each log is represented by a dictionary with the following keys:
-    * 'id': id of the log,
-    * 'Current_lbs':	weight associated with the log,
-    * 'Time_posted': time the log was posted
+    * `id`: id of the log,
+    * `Current_lbs`:	weight associated with the log,
+    * `Time_posted`: time the log was posted
     """
     json = None
     with db.engine.connect() as conn:
@@ -50,13 +50,13 @@ def get_logs(user_id: int = Query(ge=0)):
 @router.post("/user/{user_id}/logs", tags=["logs"])
 def create_log(user_id: int, log: logJSON):
     """
-    This endpoint creates a new log for a given user
+    This endpoint creates a new log for a given user.
 
     Each log contains the following keys:
-    * 'id': the log that the workout is being added to,
-    * 'User_id': the id of the user who’s log this is being added to,
-    * 'Current_lbs': the weight of the user for the log,
-    * 'Time_posted': datetime for the log
+    * `id`: the log that the workout is being added to,
+    * `User_id`: the id of the user who’s log this is being added to,
+    * `Current_lbs`: the weight of the user for the log,
+    * `Time_posted`: datetime for the log
     """
 
     with db.engine.begin() as conn:

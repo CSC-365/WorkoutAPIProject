@@ -1,0 +1,2 @@
+ValueError: user does not have enough logs to make a projection
+ValueError: user does not have enough logs to make a projection

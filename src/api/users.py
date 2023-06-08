@@ -50,8 +50,8 @@ def create_user(user: UserJson):
 
     Limitations:
     1. User must use Americans units for height and weight.
-    2. Two users with the same username can be created, which will cause confusion for v2
-    3. Birthday string must be in format YYYY-MM-DD
+    2. Birthday string must be in format YYYY-MM-DD
+    3. Gender must be either M or F
     """
     with db.engine.begin() as conn:
 
@@ -61,6 +61,9 @@ def create_user(user: UserJson):
             raise HTTPException(status_code=400, detail="Invalid weight")
         if int(user.height_inches) < 0:
             raise HTTPException(status_code=400, detail="Invalid height")
+        # make sure birthday is in the correct format YYYY-MM-DD
+        if len(str(user.birthday)) != 10:
+            raise HTTPException(status_code=400, detail="Invalid birthday")
         salt = os.urandom(32)  # A new salt for this user
         key = hashlib.pbkdf2_hmac(
             'sha256', user.password.encode('utf-8'), salt, 100000)
@@ -79,13 +82,13 @@ def create_user(user: UserJson):
 def get_user(id: int = Query(ge=0)):
     """
     This endpoint returns a user's information based on their id. For each user it returns:
-        * `user_id`: the internal id of the user.
-        * `name`: The name of the user.
-        * `starting_lbs`: The starting weight of the user.
-        * `height_inches`: The height of the user.
-        * `avg_calorie_intake`: The average calorie intake of the user.
-        * 'birthday': The birthday of the user.
-        * 'gender': the gender of the user.
+    * `user_id`: The internal id of the user,
+    * `name`: The name of the user,
+    * `starting_lbs`: The starting weight of the user,
+    * `height_inches`: The height of the user,
+    * `avg_calorie_intake`: The average calorie intake of the user,
+    * `birthday`: The birthday of the user,
+    * `gender` The gender of the user
     """
     json = None
 
@@ -106,12 +109,16 @@ def get_user(id: int = Query(ge=0)):
 
     if json is None:
         raise HTTPException(status_code=404, detail="user not found.")
-
     return json
 
 
 @router.post("/users/login", tags=["users"])
 def login_user(username: str, password: str):
+    """
+    This endpoint logs in a user based on their username and password. The user must provide:
+    * `username`: the name of the user,
+    * `password`: the password of the user
+    """
     with db.engine.connect() as conn:
         user = conn.execute(
             text("SELECT salt, password FROM users WHERE name = :name"), {"name": username}).fetchone()
