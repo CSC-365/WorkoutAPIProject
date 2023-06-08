@@ -10,18 +10,18 @@ router = APIRouter()
 def get_workouts(user_id: int):
     """
     This endpoint returns a user's workout information based on their id. For each user it returns:
-        * 'User_id': user_id
-        * 'Workouts': a list of workouts
+    * `User_id`: user_id,
+    * `Workouts`: a list of workouts
 
     Each workout consists of:
-        * 'Workout_id': workout_ id
-        * 'workout_name': name of the workout,
-        * 'Weight': the weight for the workout, null if not applicable
-        * 'Distance_ft': the distance for the workout
-        * 'Repetitions': number of repetiontions for the workout
-        * 'Seconds': duration of the workout in seconds, null if not applicable
-        * 'Sets': number of sets of the workout
-        * 'Times_per_week': the number of times per week the workout is performed
+    * `Workout_id`: workout_ id
+    * `workout_name`: name of the workout,
+    * `Weight`: the weight for the workout, null if not applicable,
+    * `Distance_ft`: the distance for the workout,
+    * `Repetitions`: number of repetiontions for the workout,
+    * `Seconds`: duration of the workout in seconds, null if not applicable,
+    * `Sets`: number of sets of the workout,
+    * `Times_per_week`: the number of times per week the workout is performed
     """
     with db.engine.begin() as conn:
         user = conn.execute(

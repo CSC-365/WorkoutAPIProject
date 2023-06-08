@@ -14,7 +14,22 @@ class projectionJSON(BaseModel):
 
 
 @router.post("/user/{user_id}/projection", tags=["projection"])
-def create_projection(user_id: int, projection: projectionJSON):  # 2
+def create_projection(user_id: int, projection: projectionJSON):
+    """
+    This endpoint creates a new projection for a given user. A projection is an estimate The user must provide the data for the projection
+    via a projectionJSON object which contains the following keys:
+    * `projection_date`: the date for which the projection is being made. This date must be in the format YYYY-MM-DD.
+
+    """
+    # check projection date format is correct
+    try:
+        date.fromisoformat(str(projection.projection_date))
+    except ValueError:
+        return HTTPException(status_code=400, detail="projection_date must be in the format YYYY-MM-DD")
+    # check projection_date is in the future
+    if projection.projection_date < date.today():
+        return HTTPException(status_code=400, detail="projection_date must be in the future")
+
     with db.engine.begin() as conn:
         user = conn.execute(text("SELECT name FROM users WHERE id = :id"), {
                             "id": user_id}).fetchone()
@@ -25,6 +40,10 @@ def create_projection(user_id: int, projection: projectionJSON):  # 2
             text("SELECT current_lbs, time_posted FROM logs WHERE user_id = :user_id ORDER BY time_posted"),
             {"user_id": user_id}
         ).fetchall()
+
+        # make sure there are at least 2 logs
+        if len(logs) < 2:
+            return HTTPException(status_code=400, detail="Not enough logs to make a projection")
 
         try:
             projectedLoss = bl.calculate_projection(
@@ -46,15 +65,15 @@ def create_projection(user_id: int, projection: projectionJSON):  # 2
 def get_projection(user_id: int = Query(ge=0)):  # 3
     """
     This endpoint returns all the projections in the database for a given user. For each projection it returns:
-    * 'User_id': user_id,
-    * 'Name': name of the user,
-    * 'Projections': list of projections
+    * `User_id`: user_id,
+    * `Name`: name of the user,
+    * `Projections`: list of projections
 
     Each projection is represented by a dictionary with the following keys:
-    * 'Projection_id': id of the projection
-    * 'Projection_lbs':	weight associated with the projection
-    * 'Projection_date': date for the projection
-    * 'Date_posted': date the projection was posted
+    * `Projection_id`: id of the projection
+    * `Projection_lbs`:	weight associated with the projection
+    * `Projection_date`: date for the projection
+    * `Date_posted`: date the projection was posted
     """
     json = None
     with db.engine.connect() as conn:

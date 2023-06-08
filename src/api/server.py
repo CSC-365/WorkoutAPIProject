@@ -2,32 +2,32 @@ from fastapi import FastAPI
 from src.api import users, pkg_util, goals, logs, workouts, projection
 
 description = """
-Workout API returns workout information based on a user's physical attributes and goals.
+Workout API returns workout information based on a user's physical attributes and goals. 
 
 ## Users
 
 You can:
 * **Create a user based on personal information**
 * **Retrieve a user's information based on their id**
+* **Login as user with your name and password**
 
 ## Goals
 
 You can:
 * **Create a goal based on a user's id and goal information**
-* **Retrieve a goal's information based on its id**
 
 ## Logs
 You can:
 * **Create a log based on a user's id and log information**
-* **Retrieve a log's information based on its id**
+* **Retrieve logs for a given user**
 
 ## Workouts
 You can:
-* **Retrieve a workout's information based on its id**
+* **Retrieve workouts for a given user id**
 
 ## Projections
 You can:
-* **Retrieve a user's projections based on its id**
+* **Retrieve a user's projections**
 * **Create a new projection for a user**
 
 """
