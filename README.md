@@ -55,7 +55,7 @@
 
 
 ### Built With
-
+- Faker
 - Database Hosted by Supabase
 - Deployed Using Vercel
 - Migration scripts generated using Alembic
