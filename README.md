@@ -146,9 +146,9 @@ run: pip install -r requirements.txt
 
 ## Usage
 
-> Use the vercel link listed on our github page and visit /docs to access the api functions
+> Use the vercel link listed on our github page and visit /docs to access the api functions.
 > There you can test the various functions our api offers.
-> **Users Functions**
+- **Users Functions**
 - Create a user based on personal information
 - Retrieve a user's information based on their id
 >
