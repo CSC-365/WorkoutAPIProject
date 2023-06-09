@@ -15,11 +15,20 @@ class GoalJson(BaseModel):
 
 
 @router.post("/goals/", tags=["goals"])
-def create_goal(goal: GoalJson):  # 1
+def create_goal(goal: GoalJson):
+    """
+    This endpoint creates a new goal for a given user. The endpoint uses a GoalJson
+    object as an input which holds all the attributes for the goal:
+    * `user_id` is the id of the user who's goal is being added.
+    * `type_id` is the id of the type of goal being added.
+    * `target_weight` is the target weight of the user for the goal.
+    """
     with db.engine.begin() as conn:
         if goal.type_id != 0:
             raise HTTPException(status_code=400, detail="Invalid type_id")
-
+        if goal.target_weight < 0:
+            raise HTTPException(
+                status_code=400, detail="Invalid target_weight")
         user = conn.execute(
             text(
                 "SELECT starting_lbs, birthday, gender, height_inches FROM users WHERE id = :id"),
