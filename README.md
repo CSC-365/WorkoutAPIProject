@@ -64,6 +64,9 @@
 ## Getting Started
 
 ### Prerequisites
+Paste the following dependencies into a requirement.txt file.
+run: pip install -r requirements.txt
+
 - anyio==3.6.2
 - attrs==22.2.0
 - bleach==6.0.0
